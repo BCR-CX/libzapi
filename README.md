@@ -1,4 +1,4 @@
-[![Build](https://github.com/BCR-CX/zapi/actions/workflows/build.yml/badge.svg)](https://github.com/BCR-CX/zapi/actions/workflows/build.yml)
+[![Build](https://github.com/BCR-CX/libzapi/actions/workflows/build.yml/badge.svg)](https://github.com/BCR-CX/zapi/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_zapi&metric=alert_status&token=e968e8f9c809ca74e14256de7dc70d7de9923220)](https://sonarcloud.io/summary/new_code?id=BCR-CX_zapi)
 
 [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_zapi&metric=bugs&token=e968e8f9c809ca74e14256de7dc70d7de9923220)](https://sonarcloud.io/summary/new_code?id=BCR-CX_zapi)
