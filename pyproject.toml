@@ -1,9 +1,23 @@
 [project]
 name = "libzapi"
 version = "0.1.0"
+authors = [
+    { name = "Leandro Meili", email = "leandro.meili@bcrcx.com"},
+    ]
 description = "Python client for the Zendesk API"
 readme = "README.md"
 requires-python = ">=3.12"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICEN[CS]E*"]
+
+[project.urls]
+Homepage = "https://github.com/BCR-CX/libzapi"
+Issues = "https://github.com/BCR-CX/libzapi/issues"
+
 dependencies = [
     "cattrs>=25.3.0",
     "requests>=2.32.5",
@@ -37,6 +51,7 @@ dev = [
     "sphinx-copybutton",
     "sphinx_design",
     "tox>=4.32.0",
+    "twine>=6.2.0",
 ]
 
 [tool.ruff]
