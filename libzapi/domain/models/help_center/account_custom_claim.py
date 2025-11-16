@@ -6,11 +6,11 @@ from libzapi.domain.shared_objects.logical_key import LogicalKey
 
 @dataclass(frozen=True, slots=True)
 class CustomClaim:
-    id: int
+    id: str
     account_id: int
     brand_id: int
     claim_identifier: str
-    claims_value: str
+    claim_value: str
     claim_description: str
     created_at: datetime | None
     updated_at: datetime | None
