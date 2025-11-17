@@ -14,7 +14,7 @@ class UserSegment:
     or_tags: list[str]
     created_at: datetime | None
     updated_at: datetime | None
-    build_in: bool
+    built_in: bool
     added_user_ids: list[int]
     name: str
 
