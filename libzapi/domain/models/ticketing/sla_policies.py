@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 from libzapi.domain.shared_objects.condition import AllAnyCondition
 from libzapi.domain.shared_objects.logical_key import LogicalKey
