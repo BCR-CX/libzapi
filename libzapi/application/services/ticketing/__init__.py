@@ -8,6 +8,7 @@ from libzapi.application.services.ticketing.macro_service import MacroService
 from libzapi.application.services.ticketing.requests_service import RequestsService
 from libzapi.application.services.ticketing.schedule_service import ScheduleService
 from libzapi.application.services.ticketing.sessions_service import SessionsService
+from libzapi.application.services.ticketing.sla_policies_service import SlaPoliciesService
 from libzapi.application.services.ticketing.support_addresses_service import SupportAddressesService
 from libzapi.application.services.ticketing.ticket_audits_service import TicketAuditsService
 from libzapi.application.services.ticketing.ticket_fields_service import TicketFieldsService
@@ -45,6 +46,7 @@ class Ticketing:
         self.requests = RequestsService(api.RequestApiClient(http))
         self.schedules = ScheduleService(api.ScheduleApiClient(http))
         self.sessions = SessionsService(api.SessionApiClient(http))
+        self.sla_policies = SlaPoliciesService(api.SlaPolicyApiClient(http))
         self.support_addresses = SupportAddressesService(api.SupportAddressApiClient(http))
         self.ticket_audits = TicketAuditsService(api.TicketAuditApiClient(http))
         self.ticket_fields = TicketFieldsService(api.TicketFieldApiClient(http))

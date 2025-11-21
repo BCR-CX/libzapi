@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 
 from libzapi.domain.shared_objects.condition import AllAnyCondition
+from libzapi.domain.shared_objects.logical_key import LogicalKey
 
 
 @dataclass(frozen=True, slots=True)
@@ -25,4 +26,8 @@ class SlaPolicy:
     policy_metrics: List[SlaPolicyMetric]
     created_at: datetime
     updated_at: datetime
-    metric_settings: Optional[dict] = None
+
+    @property
+    def logical_key(self) -> LogicalKey:
+        base = self.title.lower().replace(" ", "_")
+        return LogicalKey("sla_policy", base)
