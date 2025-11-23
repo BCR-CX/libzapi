@@ -1,7 +1,8 @@
 from datetime import datetime
 
 from libzapi.domain.models.ticketing.group import Group
-from libzapi.infrastructure.mappers.ticketing.group_mapper import to_payload_create, to_domain
+from libzapi.infrastructure.mappers.ticketing.group_mapper import to_payload_create
+from libzapi.infrastructure.serialization.parse import to_domain
 
 
 def test_mapper_to_domain_and_back_payload_roundtrip():
@@ -14,8 +15,9 @@ def test_mapper_to_domain_and_back_payload_roundtrip():
         "created_at": "2024-01-01T12:00:00Z",
         "updated_at": "2024-01-02T12:00:00Z",
         "url": "https://example.zendesk.com/api/v2/groups/301.json",
+        "deleted": False,
     }
-    entity = to_domain(raw)
+    entity = to_domain(raw, Group)
     assert entity.id == 301
     assert entity.name == "Support Team"
     assert entity.description == "Handles customer support tickets"

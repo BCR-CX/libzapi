@@ -5,7 +5,6 @@ from typing import Iterable
 from libzapi.domain.models.ticketing.schedule import Schedule, Holiday
 from libzapi.infrastructure.http.client import HttpClient
 from libzapi.infrastructure.http.pagination import yield_items
-from libzapi.infrastructure.mappers.ticketing.schedule_mapper import schedule_to_domain
 from libzapi.infrastructure.serialization.parse import to_domain
 
 
@@ -35,7 +34,7 @@ class ScheduleApiClient:
 
     def get(self, schedule_id: int) -> Schedule:
         data = self._http.get(f"/api/v2/business_hours/schedules/{schedule_id}")
-        return schedule_to_domain(data["schedule"])
+        return to_domain(data=data["schedule"], cls=Schedule)
 
     def get_holiday(self, schedule_id: int, holiday_id) -> Holiday:
         data = self._http.get(f"/api/v2/business_hours/schedules/{schedule_id}/holidays/{holiday_id}")
