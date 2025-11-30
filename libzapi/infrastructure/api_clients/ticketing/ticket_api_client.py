@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Iterator, List
+from typing import Iterator, Iterable
 
 from libzapi.domain.models.ticketing.ticket import Ticket, User
 from libzapi.domain.shared_objects.count_snapshot import CountSnapshot
@@ -79,7 +79,7 @@ class TicketApiClient:
         data = self._http.get(f"/api/v2/users/{int(user_id)}/tickets/assigned/count")
         return data["count"]
 
-    def show_multiple_tickets(self, ticket_ids: List[int]) -> Iterator[Ticket]:
+    def show_multiple_tickets(self, ticket_ids: Iterable[int]) -> Iterator[Ticket]:
         ids_str = ",".join(str(id_) for id_ in ticket_ids)
         data = self._http.get(f"/api/v2/tickets/show_many?ids={ids_str}")
         for obj in data["tickets"]:

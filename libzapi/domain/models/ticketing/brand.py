@@ -3,21 +3,7 @@ from datetime import datetime
 from typing import List
 
 from libzapi.domain.shared_objects.logical_key import LogicalKey
-
-
-@dataclass(frozen=True, slots=True)
-class Thumbnail:
-    url: str
-    id: int
-    file_name: str
-    content_url: str
-    mapped_content_url: str
-    content_type: str
-    size: int
-    width: int
-    height: int
-    inline: bool
-    deleted: bool
+from libzapi.domain.shared_objects.thumbnail import Thumbnail
 
 
 @dataclass(frozen=True, slots=True)
