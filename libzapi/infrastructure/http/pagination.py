@@ -11,7 +11,7 @@ def next_link(data: dict, base_url: str) -> str | None:
     nxt = links.get("next")
     if not nxt:
         return None
-    return nxt.replace(base_url, "") if isinstance(nxt, str) and nxt.startswith(("http://", "https://")) else nxt
+    return nxt.replace(base_url, "") if isinstance(nxt, str) and nxt.startswith("https://") else nxt
 
 
 def yield_pages(get_json, first_path: str, base_url: str) -> Iterator[dict]:

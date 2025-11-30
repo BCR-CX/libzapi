@@ -23,7 +23,6 @@ class HttpClient:
         )
         adapter = HTTPAdapter(max_retries=retry)
         self.session.mount("https://", adapter)
-        self.session.mount("http://", adapter)
         self.timeout = timeout
 
     def get(self, path: str) -> dict:
