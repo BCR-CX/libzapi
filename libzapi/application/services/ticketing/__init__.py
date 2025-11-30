@@ -1,5 +1,6 @@
 import libzapi.infrastructure.api_clients.ticketing as api
 from libzapi.application.services.ticketing.account_settings_service import AccountSettingsService
+from libzapi.application.services.ticketing.attachments_service import AttachmentsService
 from libzapi.application.services.ticketing.automations_service import AutomationsService
 from libzapi.application.services.ticketing.brand_agents_service import BrandAgentsService
 from libzapi.application.services.ticketing.brands_service import BrandsService
@@ -39,6 +40,7 @@ class Ticketing:
 
         # Initialize services
         self.account_settings = AccountSettingsService(api.AccountSettingsApiClient(http))
+        self.attachments = AttachmentsService(api.AttachmentApiClient(http))
         self.automations = AutomationsService(api.AutomationApiClient(http))
         self.brands = BrandsService(api.BrandApiClient(http))
         self.brand_agents = BrandAgentsService(api.BrandAgentApiClient(http))
