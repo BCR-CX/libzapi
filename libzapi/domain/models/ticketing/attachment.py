@@ -9,7 +9,7 @@ from libzapi.domain.shared_objects.thumbnail import AttachmentThumbnail
 class Attachment:
     id: int
     url: str
-    filename: str
+    file_name: str
     content_url: str
     mapped_content_url: str
     content_type: str
@@ -24,5 +24,5 @@ class Attachment:
 
     @property
     def logical_key(self) -> LogicalKey:
-        base = self.filename.lower().replace(" ", "_")
+        base = self.file_name.lower().replace(" ", "_")
         return LogicalKey("attachment", base)
