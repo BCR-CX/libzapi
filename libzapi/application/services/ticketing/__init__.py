@@ -56,6 +56,7 @@ class Ticketing:
         self.ticket_fields = TicketFieldsService(api.TicketFieldApiClient(http))
         self.ticket_forms = TicketFormsService(api.TicketFormApiClient(http))
         self.ticket_metrics = TicketMetricsService(api.TicketMetricApiClient(http))
+        self.ticket_metric_events = api.TicketMetricEventApiClient(http)
         self.ticket_triggers = TicketTriggerService(api.TicketTriggerApiClient(http))
         self.ticket_trigger_categories = TicketTriggerCategoriesService(api.TicketTriggerCategoryApiClient(http))
         self.user_fields = UserFieldsService(api.UserFieldApiClient(http))

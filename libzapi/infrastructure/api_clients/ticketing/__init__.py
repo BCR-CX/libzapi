@@ -15,6 +15,7 @@ from libzapi.infrastructure.api_clients.ticketing.ticket_audit_api_client import
 from libzapi.infrastructure.api_clients.ticketing.ticket_field_api_client import TicketFieldApiClient
 from libzapi.infrastructure.api_clients.ticketing.ticket_form_api_client import TicketFormApiClient
 from libzapi.infrastructure.api_clients.ticketing.ticket_metric_api_client import TicketMetricApiClient
+from libzapi.infrastructure.api_clients.ticketing.ticket_metric_event_api_client import TicketMetricEventApiClient
 from libzapi.infrastructure.api_clients.ticketing.ticket_trigger_api_client import TicketTriggerApiClient
 from libzapi.infrastructure.api_clients.ticketing.ticket_trigger_category_api_client import (
     TicketTriggerCategoryApiClient,
@@ -41,6 +42,7 @@ __all__ = [
     "TicketFieldApiClient",
     "TicketFormApiClient",
     "TicketMetricApiClient",
+    "TicketMetricEventApiClient",
     "TicketTriggerApiClient",
     "TicketTriggerCategoryApiClient",
     "UserFieldApiClient",

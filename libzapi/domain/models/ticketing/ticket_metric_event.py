@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import TypeAlias
 
 from libzapi.domain.shared_objects.logical_key import LogicalKey
 
@@ -40,7 +41,7 @@ class TicketMetricEvent:
 
     @property
     def logical_key(self) -> LogicalKey:
-        base = f"metric_event_id{self.id}"
+        base = f"metric_event_id_{self.id}"
         return LogicalKey("ticket_metric_event", base)
 
 
@@ -57,3 +58,8 @@ class TicketMetricEventSla(TicketMetricEvent):
 @dataclass(frozen=True, slots=True)
 class TicketMetricEventGroupSla(TicketMetricEvent):
     group_sla: PolicyMetricTarget
+
+
+MetricEventType: TypeAlias = (
+    TicketMetricEventUpdateStatus | TicketMetricEventSla | TicketMetricEventGroupSla | TicketMetricEvent
+)
