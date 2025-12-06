@@ -100,7 +100,6 @@ class Tickets:
     ticket_id_sequence: int
     follower_subject_template: str
     follower_email_template: str
-    email_ticket_email_ccs_suspension_threshold: bool
     ticket_email_ccs_suspension_threshold: int
     messaging_enabled: bool
     ccs_followers_rules_update_required: bool
