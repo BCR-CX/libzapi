@@ -21,7 +21,7 @@ essential tool for developers and support teams.
 
 ## 📐 Architectural Layers
 
-libapi follows a lightweight Domain-Driven Design (DDD) structure with inspiration from CQRS (Command-Query Responsibility
+LibZapi follows a lightweight Domain-Driven Design (DDD) structure with inspiration from CQRS (Command-Query Responsibility
 Segregation).
 Even though it’s an SDK, this separation keeps models clear, testable, and easy to extend.
 
