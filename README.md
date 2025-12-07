@@ -13,8 +13,6 @@
 
 # Libzapi - The Official BCR.CX API Client for Zendesk
 
-![libzapi Logo](images/libzapi_logo.png)
-
 LibZapi is a powerful and easy-to-use API client designed specifically for interacting with the Zendesk. It simplifies the
 process of managing customer support tickets, automating workflows, and retrieving data from Zendesk, making it an
 essential tool for developers and support teams.
