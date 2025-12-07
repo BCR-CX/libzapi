@@ -4,6 +4,7 @@ from libzapi.application.services.ticketing.attachments_service import Attachmen
 from libzapi.application.services.ticketing.automations_service import AutomationsService
 from libzapi.application.services.ticketing.brand_agents_service import BrandAgentsService
 from libzapi.application.services.ticketing.brands_service import BrandsService
+from libzapi.application.services.ticketing.email_notifications_service import EmailNotificationService
 from libzapi.application.services.ticketing.groups_service import GroupsService
 from libzapi.application.services.ticketing.macro_service import MacroService
 from libzapi.application.services.ticketing.requests_service import RequestsService
@@ -45,6 +46,7 @@ class Ticketing:
         self.automations = AutomationsService(api.AutomationApiClient(http))
         self.brands = BrandsService(api.BrandApiClient(http))
         self.brand_agents = BrandAgentsService(api.BrandAgentApiClient(http))
+        self.email_notifications = EmailNotificationService(api.EmailNotificationApiClient(http))
         self.groups = GroupsService(api.GroupApiClient(http))
         self.macros = MacroService(api.MacroApiClient(http))
         self.requests = RequestsService(api.RequestApiClient(http))

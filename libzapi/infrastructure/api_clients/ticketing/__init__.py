@@ -3,6 +3,7 @@ from libzapi.infrastructure.api_clients.ticketing.attachment_api_client import A
 from libzapi.infrastructure.api_clients.ticketing.automation_api_client import AutomationApiClient
 from libzapi.infrastructure.api_clients.ticketing.brand_api_client import BrandApiClient
 from libzapi.infrastructure.api_clients.ticketing.brand_agent_api_client import BrandAgentApiClient
+from libzapi.infrastructure.api_clients.ticketing.email_notification_api_client import EmailNotificationApiClient
 from libzapi.infrastructure.api_clients.ticketing.group_api_client import GroupApiClient
 from libzapi.infrastructure.api_clients.ticketing.macro_api_client import MacroApiClient
 from libzapi.infrastructure.api_clients.ticketing.request_api_client import RequestApiClient
@@ -31,6 +32,7 @@ __all__ = [
     "AutomationApiClient",
     "BrandApiClient",
     "BrandAgentApiClient",
+    "EmailNotificationApiClient",
     "GroupApiClient",
     "MacroApiClient",
     "RequestApiClient",
