@@ -20,6 +20,7 @@ from libzapi.application.services.ticketing.ticket_forms_service import TicketFo
 from libzapi.application.services.ticketing.ticket_metrics_service import TicketMetricsService
 from libzapi.application.services.ticketing.ticket_trigger_categories_service import TicketTriggerCategoriesService
 from libzapi.application.services.ticketing.ticket_trigger_service import TicketTriggerService
+from libzapi.application.services.ticketing.users_service import UsersService
 from libzapi.application.services.ticketing.user_fields_service import UserFieldsService
 from libzapi.application.services.ticketing.views_service import ViewsService
 from libzapi.application.services.ticketing.workspace_service import WorkspaceService
@@ -63,6 +64,7 @@ class Ticketing:
         self.ticket_metric_events = api.TicketMetricEventApiClient(http)
         self.ticket_triggers = TicketTriggerService(api.TicketTriggerApiClient(http))
         self.ticket_trigger_categories = TicketTriggerCategoriesService(api.TicketTriggerCategoryApiClient(http))
+        self.users = UsersService(api.UserApiClient(http))
         self.user_fields = UserFieldsService(api.UserFieldApiClient(http))
         self.views = ViewsService(api.ViewApiClient(http))
         self.workspaces = WorkspaceService(api.WorkspaceApiClient(http))

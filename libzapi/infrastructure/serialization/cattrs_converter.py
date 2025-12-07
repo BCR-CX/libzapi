@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 from datetime import datetime, date
 from enum import Enum
 from typing import Any
+
 import cattrs
 
 __all__ = ["get_converter", "new_converter"]
@@ -9,6 +11,8 @@ __all__ = ["get_converter", "new_converter"]
 from libzapi.domain.models.ticketing.ticket import Source
 
 _converter: cattrs.Converter | None = None
+
+OrganizationIdType = int | list[int] | None
 
 
 def _install_default_hooks(conv: cattrs.Converter) -> None:
@@ -49,6 +53,16 @@ def _install_default_hooks(conv: cattrs.Converter) -> None:
             "rel": src.rel,
         }
 
+    def structure_org_ids(v, _):
+        if v is None:
+            return []
+        if isinstance(v, int):
+            return [v]
+        if isinstance(v, list):
+            return [int(x) for x in v]
+        raise TypeError(f"Cannot structure OrganizationIdType from {v!r}")
+
+    conv.register_structure_hook(OrganizationIdType, structure_org_ids)
     conv.register_structure_hook(Source, _structure_source)
     conv.register_unstructure_hook(Source, _unstructure_source)
 
