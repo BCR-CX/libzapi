@@ -1,4 +1,5 @@
 from libzapi.application.services.custom_data.custom_objects_service import CustomObjectsService
+from libzapi.application.services.custom_data.custom_object_fields_service import CustomObjectFieldsService
 from libzapi.infrastructure.http.auth import oauth_headers, api_token_headers
 from libzapi.infrastructure.http.client import HttpClient
 import libzapi.infrastructure.api_clients.custom_data as api
@@ -19,3 +20,4 @@ class CustomData:
 
         # Initialize services
         self.custom_objects = CustomObjectsService(api.CustomObjectApiClient(http))
+        self.custom_object_fields = CustomObjectFieldsService(api.CustomObjectFieldApiClient(http))
