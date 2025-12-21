@@ -1,6 +1,7 @@
 from typing import Iterator
 
-from libzapi.domain.models.custom_data.custom_object import CustomObject, CustomObjectLimit
+from libzapi.domain.models.custom_data.custom_object import CustomObject
+from libzapi.domain.shared_objects.custom_object_limit import CustomObjectLimit
 from libzapi.infrastructure.api_clients.custom_data import CustomObjectApiClient
 
 

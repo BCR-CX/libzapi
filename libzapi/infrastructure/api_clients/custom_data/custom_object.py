@@ -1,6 +1,7 @@
 from typing import Iterator
 
-from libzapi.domain.models.custom_data.custom_object import CustomObject, CustomObjectLimit
+from libzapi.domain.models.custom_data.custom_object import CustomObject
+from libzapi.domain.shared_objects.custom_object_limit import CustomObjectLimit
 from libzapi.infrastructure.http.client import HttpClient
 from libzapi.infrastructure.http.pagination import yield_items
 from libzapi.infrastructure.serialization.parse import to_domain
