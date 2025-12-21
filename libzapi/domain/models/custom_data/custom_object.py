@@ -5,12 +5,6 @@ from libzapi.domain.shared_objects.logical_key import LogicalKey
 
 
 @dataclass(frozen=True, slots=True)
-class CustomObjectLimit:
-    count: int
-    limit: int
-
-
-@dataclass(frozen=True, slots=True)
 class CustomObject:
     url: str
     key: str
