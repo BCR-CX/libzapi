@@ -4,7 +4,7 @@ from dataclasses import dataclass
 @dataclass(frozen=True, slots=True)
 class Thumbnail:
     url: str
-    id: int
+    id: str
     file_name: str
     content_url: str
     mapped_content_url: str
