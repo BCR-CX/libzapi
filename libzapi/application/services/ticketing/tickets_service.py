@@ -89,7 +89,7 @@ class TickestService:
         return self._client.create_ticket(entity=entity)
 
     @staticmethod
-    def cast_to_ticket_command(cmd_type, brand_id: int | None, description: str, fields: Iterable[dict], group_id: int | None,
+    def cast_to_ticket_command(cmd_type, brand_id: int | None, description: str, fields: Iterable[CustomField], group_id: int | None,
                                organization_id: int | None, priority: str, problem_id: int | None,
                                requester_id: int | None, subject: str, tags: Iterable[str], ticket_form_id: int | None,
                                ticket_type: str) -> TicketCmd:
