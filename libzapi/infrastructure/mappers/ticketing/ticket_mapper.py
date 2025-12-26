@@ -5,7 +5,8 @@ def to_payload_create(cmd: CreateTicketCmd) -> dict:
     return {
         "ticket": {
             "subject": cmd.subject,
-            "custom_fields": [vars(cf) for cf in cmd.custom_fields],
+            "custom_fields": [{"id": cf.id,
+                               "value": cf.value} for cf in cmd.custom_fields],
             "description": cmd.description,
             "priority": cmd.priority,
             "type": cmd.type,
