@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional, TypeAlias, Literal, Sequence
 
 from libzapi.domain.shared_objects.logical_key import LogicalKey
+from libzapi.domain.shared_objects.relationship import RelationshipFilter
 
 
 @dataclass(frozen=True, slots=True)
@@ -11,32 +12,6 @@ class CustomFieldOption:
     name: str
     raw_name: str
     value: str
-
-
-LookupOperator: TypeAlias = Literal[
-    "is",
-    "is_not",
-    "includes",
-    "not_includes",
-    "present",
-    "less_than",
-    "less_than_equal",
-    "greater_than",
-    "greater_than_equal",
-]
-
-
-@dataclass(frozen=True, slots=True)
-class RelationshipFilterClause:
-    field: str
-    operator: LookupOperator
-    value: str
-
-
-@dataclass(frozen=True, slots=True)
-class RelationshipFilter:
-    all: Sequence[RelationshipFilterClause] = ()
-    any: Sequence[RelationshipFilterClause] = ()
 
 
 CustomObjectFieldType: TypeAlias = Literal[
