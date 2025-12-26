@@ -10,6 +10,7 @@ from libzapi.domain.shared_objects.thumbnail import Thumbnail
 class CustomObjectRecord:
     url: str
     id: str
+    name: str
     custom_object_key: str
     custom_object_fields: dict[str, str]
     created_by_user_id: str
