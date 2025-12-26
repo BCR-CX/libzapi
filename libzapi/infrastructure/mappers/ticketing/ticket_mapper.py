@@ -26,7 +26,8 @@ def to_payload_update(cmd: UpdateTicketCmd) -> dict:
     if cmd.subject:
         patch["subject"] = cmd.subject
     if cmd.custom_fields:
-        patch["custom_fields"] = [vars(cf) for cf in cmd.custom_fields]
+        patch["custom_fields"] = [{"id": cf.id,
+                               "value": cf.value} for cf in cmd.custom_fields],
     if cmd.description:
         patch["description"] = cmd.description
     if cmd.priority:
