@@ -177,6 +177,13 @@ class SystemFieldPriority(TicketFieldBase):
 
 
 @dataclass(frozen=True, slots=True)
+class SystemFieldBasicPriority(TicketFieldBase):
+    type: Literal["basic_priority"]
+    system_field_options: Sequence[SystemFieldOption]
+    sub_type_id: int
+
+
+@dataclass(frozen=True, slots=True)
 class SystemFieldGroup(TicketFieldBase):
     type: Literal["group"]
 
@@ -209,6 +216,7 @@ TicketField: TypeAlias = (
     | SystemFieldCustomStatus
     | SystemFieldTicketType
     | SystemFieldPriority
+    | SystemFieldBasicPriority
     | SystemFieldGroup
     | SystemFieldAssignee
 )
