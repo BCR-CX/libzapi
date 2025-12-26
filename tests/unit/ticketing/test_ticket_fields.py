@@ -1,10 +1,10 @@
 from hypothesis import given
 from hypothesis.strategies import integers, just, builds
 
-from libzapi.domain.models.ticketing.ticket_field import TicketField
+from libzapi.domain.models.ticketing.ticket_field import CustomFieldText
 
 ticket_field_strategy = builds(
-    TicketField,
+    CustomFieldText,
     id=integers(min_value=1),
     raw_title=just("order_number"),
 )
