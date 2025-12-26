@@ -1,5 +1,3 @@
-from email.charset import add_alias
-
 from libzapi import Ticketing
 
 
