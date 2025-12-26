@@ -4,9 +4,12 @@ from typing import Iterator, Iterable
 
 from libzapi.domain.models.ticketing.ticket import Ticket, User
 from libzapi.domain.shared_objects.count_snapshot import CountSnapshot
+from libzapi.domain.shared_objects.job_status import JobStatus
 from libzapi.infrastructure.http.client import HttpClient
 from libzapi.infrastructure.http.pagination import yield_items
 from libzapi.infrastructure.serialization.parse import to_domain
+from libzapi.infrastructure.mappers.ticketing.ticket_mapper import to_payload_create, to_payload_update
+from libzapi.application.commands.ticketing.ticket_cmds import CreateTicketCmd, UpdateTicketCmd
 
 
 class TicketApiClient:
@@ -84,6 +87,21 @@ class TicketApiClient:
         data = self._http.get(f"/api/v2/tickets/show_many?ids={ids_str}")
         for obj in data["tickets"]:
             yield to_domain(data=obj, cls=Ticket)
+
+    def create_ticket(self, entity: CreateTicketCmd) -> Ticket:
+        payload = to_payload_create(entity)
+        data = self._http.post("/api/v2/tickets", payload)
+        return to_domain(data=data["ticket"], cls=Ticket)
+
+    def update_ticket(self, ticket_id: int, entity: UpdateTicketCmd) -> Ticket:
+        payload = to_payload_update(entity)
+        data = self._http.put(f"/api/v2/tickets/{int(ticket_id)}", payload)
+        return to_domain(data=data["ticket"], cls=Ticket)
+
+    def create_many(self, entity: Iterable[CreateTicketCmd]) -> JobStatus:
+        payload = {"tickets": [to_payload_create(e)["ticket"] for e in entity]}
+        data = self._http.post("/api/v2/tickets/create_many", payload)
+        return to_domain(data=data["job_status"], cls=JobStatus)
 
     def _list_tickets(self, path: str) -> Iterator[Ticket]:
         """Helper to reduce code duplication for listing tickets."""
