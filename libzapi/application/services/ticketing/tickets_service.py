@@ -1,4 +1,4 @@
-from typing import Iterable, Iterator, Any
+from typing import Iterable
 
 from libzapi.application.commands.ticketing.ticket_cmds import CreateTicketCmd, UpdateTicketCmd, TicketCmd
 from libzapi.domain.models.ticketing.ticket import Ticket, User, CustomField
