@@ -13,6 +13,7 @@ class User:
     id: int
     url: str
     name: str
+    email: str
     created_at: datetime
     updated_at: datetime
     time_zone: str
