@@ -41,7 +41,7 @@ class CustomObjectRecordApiClient:
 
     def get(self, custom_object_key: str, custom_object_record_id: str) -> CustomObjectRecord:
         data = self._http.get(f"/api/v2/custom_objects/{custom_object_key}/records/{custom_object_record_id}")
-        return to_domain(data=data["custom_object"], cls=CustomObjectRecord)
+        return to_domain(data=data["custom_object_record"], cls=CustomObjectRecord)
 
     def create(self, payload: dict) -> CustomObjectRecord:
         raise NotImplementedError
