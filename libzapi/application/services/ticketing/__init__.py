@@ -7,6 +7,7 @@ from libzapi.application.services.ticketing.brands_service import BrandsService
 from libzapi.application.services.ticketing.email_notifications_service import EmailNotificationService
 from libzapi.application.services.ticketing.groups_service import GroupsService
 from libzapi.application.services.ticketing.macro_service import MacroService
+from libzapi.application.services.ticketing.organizations_service import OrganizationsService
 from libzapi.application.services.ticketing.requests_service import RequestsService
 from libzapi.application.services.ticketing.schedule_service import ScheduleService
 from libzapi.application.services.ticketing.sessions_service import SessionsService
@@ -50,6 +51,7 @@ class Ticketing:
         self.email_notifications = EmailNotificationService(api.EmailNotificationApiClient(http))
         self.groups = GroupsService(api.GroupApiClient(http))
         self.macros = MacroService(api.MacroApiClient(http))
+        self.organizations = OrganizationsService(api.OrganizationApiClient(http))
         self.requests = RequestsService(api.RequestApiClient(http))
         self.schedules = ScheduleService(api.ScheduleApiClient(http))
         self.sessions = SessionsService(api.SessionApiClient(http))
