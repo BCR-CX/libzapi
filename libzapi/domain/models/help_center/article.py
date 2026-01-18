@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Optional
 
 from libzapi.domain.shared_objects.logical_key import LogicalKey
 
@@ -12,7 +13,7 @@ class Article:
     author_id: int
     comments_disabled: bool
     draft: bool
-    promote: bool
+    promoted: bool
     position: int
     vote_sum: int
     vote_count: int
@@ -31,7 +32,8 @@ class Article:
     content_tag_ids: list[str]
     label_names: list[str]
     body: str | None
-    user_segment_ids: list[int] | None
+    user_segment_id: int | None
+    user_segment_ids: Optional[list[int]] = None
 
     @property
     def logical_key(self) -> LogicalKey:
