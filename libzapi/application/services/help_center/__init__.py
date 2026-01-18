@@ -1,6 +1,7 @@
 import libzapi.infrastructure.api_clients.help_center as api
 from libzapi.application.services.help_center.account_custom_claims_service import AccountCustomClaimsService
 from libzapi.application.services.help_center.articles_service import ArticlesService
+from libzapi.application.services.help_center.article_attachments_service import ArticleAttachmentsService
 from libzapi.application.services.help_center.categories_service import CategoriesService
 from libzapi.application.services.help_center.sections_service import SectionsService
 from libzapi.application.services.help_center.user_segments_service import UserSegmentsService
@@ -25,6 +26,7 @@ class HelpCenter:
         # Initialize services
         self.account_custom_claims = AccountCustomClaimsService(api.AccountCustomClaimApiClient(http))
         self.articles = ArticlesService(api.ArticleApiClient(http))
+        self.articles_attachments = ArticleAttachmentsService(api.ArticleAttachmentApiClient(http))
         self.categories = CategoriesService(api.CategoryApiClient(http))
         self.sections = SectionsService(api.SectionApiClient(http))
         self.user_segments = UserSegmentsService(api.UserSegmentApiClient(http))

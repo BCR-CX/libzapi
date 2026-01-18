@@ -1,5 +1,6 @@
 from libzapi.infrastructure.api_clients.help_center.account_custom_claim_api_client import AccountCustomClaimApiClient
 from libzapi.infrastructure.api_clients.help_center.article_api_client import ArticleApiClient
+from libzapi.infrastructure.api_clients.help_center.article_attachment_api_client import ArticleAttachmentApiClient
 from libzapi.infrastructure.api_clients.help_center.category_api_client import CategoryApiClient
 from libzapi.infrastructure.api_clients.help_center.section_api_client import SectionApiClient
 from libzapi.infrastructure.api_clients.help_center.user_segment_api_client import UserSegmentApiClient
@@ -7,6 +8,7 @@ from libzapi.infrastructure.api_clients.help_center.user_segment_api_client impo
 __all__ = [
     "AccountCustomClaimApiClient",
     "ArticleApiClient",
+    "ArticleAttachmentApiClient",
     "CategoryApiClient",
     "SectionApiClient",
     "UserSegmentApiClient",
