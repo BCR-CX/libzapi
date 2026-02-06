@@ -10,8 +10,8 @@ class TicketAuditsService:
     def __init__(self, client: TicketAuditApiClient) -> None:
         self._client = client
 
-    def list_by_ticket(self, user_id) -> Iterable[TicketAudit]:
-        return self._client.list_ticket(user_id)
+    def list_by_ticket(self, ticket_id: int) -> Iterable[TicketAudit]:
+        return self._client.list_ticket(ticket_id)
 
     def get_by_id(self, audit_id, ticket_id: int) -> TicketAudit:
         return self._client.get(audit_id, ticket_id)
