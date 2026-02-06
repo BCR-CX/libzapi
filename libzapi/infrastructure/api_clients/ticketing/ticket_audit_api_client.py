@@ -19,7 +19,7 @@ class TicketAuditApiClient:
             get_json=self._http.get,
             first_path=f"/api/v2/tickets/{int(ticket_id)}/audits",
             base_url=self._http.base_url,
-            items_key="ticket_audits",
+            items_key="audits",
         ):
             yield to_domain(data=obj, cls=TicketAudit)
 
