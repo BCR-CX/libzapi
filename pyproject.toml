@@ -42,20 +42,20 @@ build-backend = "hatchling.build"
 
 [project.optional-dependencies]
 test = [
-    "pytest>=8",
+    "pytest",
     "pytest-cov",
     "ruff",
     "mypy",
-    "hypothesis>=6.147.0",
-    "pytest-mock>=3.15.1",
+    "hypothesis",
+    "pytest-mock",
 ]
 
 [dependency-groups]
 dev = [
-    "pre-commit>=4.3.0",
-    "pytest>=8.4.2",
-    "pytest-cov>=7.0.0",
-    "ruff>=0.14.3",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "ruff",
     "sphinx",
     "myst-parser",
     "furo",
@@ -64,9 +64,9 @@ dev = [
     "sphinxcontrib-mermaid",
     "sphinx-copybutton",
     "sphinx_design",
-    "tox>=4.32.0",
-    "twine>=6.2.0",
-    "pytest-mock>=3.15.1",
+    "tox",
+    "twine",
+    "pytest-mock",
 ]
 
 [tool.ruff]
