@@ -2,14 +2,30 @@ from __future__ import annotations
 from typing import Iterator
 
 
+def _extract_next_page_link(data: dict) -> str | None:
+    """
+    Extract the next pagination link based on the default Zendesk pagination styles.
+    Check first for cursor pagination style, then try offset pagination style,
+    Zendesk returns a string with a link to the next page or null.
+
+    Some API Routes have a pagination limit, search API with only 11 pages, or 1000
+    results.
+
+    REFERENCE: https://developer.zendesk.com/api-reference/introduction/pagination
+    """
+    nxt = None
+    links = data.get("links") or {}
+    if not (nxt := links.get("next")):
+        nxt = data.get("next_page")
+    return nxt
+
+
 def next_link(data: dict, base_url: str) -> str | None:
     """
     Zendesk style cursor link extractor.
     Accepts absolute or relative next links and returns a relative path.
     """
-    links = data.get("links") or {}
-    nxt = links.get("next")
-    if not nxt:
+    if not (nxt := _extract_next_page_link(data)):
         return None
     return nxt.replace(base_url, "") if isinstance(nxt, str) and nxt.startswith("https://") else nxt
 
