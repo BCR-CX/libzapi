@@ -586,7 +586,7 @@ wheels = [
 
 [[package]]
 name = "libzapi"
-version = "0.6.1"
+version = "0.6.3"
 source = { editable = "." }
 dependencies = [
     { name = "cattrs" },
@@ -606,6 +606,7 @@ test = [
 [package.dev-dependencies]
 dev = [
     { name = "furo" },
+    { name = "hypothesis" },
     { name = "myst-parser" },
     { name = "pre-commit" },
     { name = "pytest" },
@@ -638,6 +639,7 @@ provides-extras = ["test"]
 [package.metadata.requires-dev]
 dev = [
     { name = "furo" },
+    { name = "hypothesis", specifier = ">=6.151.5" },
     { name = "myst-parser" },
     { name = "pre-commit" },
     { name = "pytest" },
