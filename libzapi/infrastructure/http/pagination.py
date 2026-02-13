@@ -13,7 +13,6 @@ def _extract_next_page_link(data: dict) -> str | None:
 
     REFERENCE: https://developer.zendesk.com/api-reference/introduction/pagination
     """
-    nxt = None
     links = data.get("links") or {}
     if not (nxt := links.get("next")):
         nxt = data.get("next_page")
