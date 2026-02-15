@@ -1,7 +1,9 @@
 from typing import Iterable
 
 from libzapi.domain.models.ticketing.ticket_trigger_category import TicketTriggerCategory
-from libzapi.infrastructure.api_clients.ticketing.ticket_trigger_category_api_client import TicketTriggerCategoryApiClient
+from libzapi.infrastructure.api_clients.ticketing.ticket_trigger_category_api_client import (
+    TicketTriggerCategoryApiClient,
+)
 
 
 class TicketTriggerCategoriesService:

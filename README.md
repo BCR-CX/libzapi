@@ -74,6 +74,11 @@ Check that uv is installed
 uv --version
 ```
 
+Install dependencies
+```bash
+uv sync --all-extras
+```
+
 As a smoke test run
 
 ```bash
@@ -81,6 +86,40 @@ uv run pytest tests/unit
 ```
 
 If you get the green light, you are ready to go!
+
+## Setup with Makefile
+
+To use the Makefile, you need the following deps:
+
+- GNU Make;
+- Python - Version 3.12;
+- pre-commit (optional; the Makefile installs it with pip if it's not in your system).
+
+```bash
+# To create the .venv and install the lib deps
+make
+
+# OR
+make build
+```
+
+### Lint and Formater
+
+This lib uses Ruff as formater.
+
+```bash
+# Format all code
+make fmt
+
+# Check code
+make lint
+```
+
+You can use pre-commit as well to do the job.
+
+```bash
+pre-commit run -a # --all-files
+```
 
 ## Steps to add a new API endpoint
 
