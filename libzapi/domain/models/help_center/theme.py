@@ -17,5 +17,5 @@ class Theme:
 
     @property
     def logical_key(self) -> LogicalKey:
-        base = f'v_{self.version}_{self.name.lower().replace(" ", "_")}'
+        base = f"v_{self.version}_{self.name.lower().replace(' ', '_')}"
         return LogicalKey("theme", base)

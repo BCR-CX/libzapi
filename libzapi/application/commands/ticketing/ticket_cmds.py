@@ -37,7 +37,4 @@ class UpdateTicketCmd:
     brand_id: int | None = None
 
 
-TicketCmd: TypeAlias = (
-        CreateTicketCmd
-        | UpdateTicketCmd
-)
+TicketCmd: TypeAlias = CreateTicketCmd | UpdateTicketCmd
