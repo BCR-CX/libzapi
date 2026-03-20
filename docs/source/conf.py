@@ -31,4 +31,9 @@ autodoc_member_order = "bysource"
 # -- Options for HTML output -------------------------------------------------
 
 html_theme = "furo"
+html_theme_options = {
+    "source_repository": "https://github.com/BCR-CX/libzapi",
+    "source_branch": "main",
+    "source_directory": "docs/source/",
+}
 html_static_path = ["_static"]
