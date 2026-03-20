@@ -3,7 +3,7 @@ from typing import Type, TypeVar
 
 import pytest
 
-from libzapi import Ticketing, HelpCenter, CustomData
+from libzapi import Ticketing, HelpCenter, CustomData, AgentAvailability
 
 T = TypeVar("T")
 
@@ -24,6 +24,12 @@ def custom_data():
 def help_center():
     """Creates a real Help Center client if environment variables are set."""
     return _generic_zendesk_client(HelpCenter)
+
+
+@pytest.fixture(scope="session")
+def agent_availability():
+    """Creates a real Agent Availability client if environment variables are set."""
+    return _generic_zendesk_client(AgentAvailability)
 
 
 def _generic_zendesk_client(client_cls: Type[T]) -> T:

@@ -40,6 +40,11 @@ class HttpClient:
         self._raise(resp)
         return resp.json()
 
+    def patch(self, path: str, json: dict) -> dict:
+        resp = self.session.patch(f"{self.base_url}{path}", json=json, timeout=self.timeout)
+        self._raise(resp)
+        return resp.json()
+
     def delete(self, path: str) -> None:
         resp = self.session.delete(f"{self.base_url}{path}", timeout=self.timeout)
         self._raise(resp)
