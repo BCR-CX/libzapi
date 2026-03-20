@@ -1,6 +1,6 @@
 [project]
 name = "libzapi"
-version = "0.6.4"
+version = "0.7.0"
 authors = [
     { name = "Leandro Meili", email = "leandro.meili@bcrcx.com"},
     ]
