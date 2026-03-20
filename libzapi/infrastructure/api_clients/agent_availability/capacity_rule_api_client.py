@@ -23,22 +23,26 @@ class CapacityRuleApiClient:
 
     def list(self) -> Iterable[CapacityRule]:
         data = self._http.get(_BASE)
-        for obj in data.get("data", []):
+        items = data if isinstance(data, list) else data.get("data", [])
+        for obj in items:
             yield to_domain(data=obj, cls=CapacityRule)
 
     def get(self, rule_id: str) -> CapacityRule:
         data = self._http.get(f"{_BASE}/{rule_id}")
-        return to_domain(data=data["data"], cls=CapacityRule)
+        obj = data.get("data", data) if isinstance(data, dict) else data
+        return to_domain(data=obj, cls=CapacityRule)
 
     def create(self, entity: CreateCapacityRuleCmd) -> CapacityRule:
         payload = to_payload_create(entity)
         data = self._http.post(_BASE, payload)
-        return to_domain(data=data["data"], cls=CapacityRule)
+        obj = data.get("data", data) if isinstance(data, dict) else data
+        return to_domain(data=obj, cls=CapacityRule)
 
     def update(self, rule_id: str, entity: UpdateCapacityRuleCmd) -> CapacityRule:
         payload = to_payload_update(entity)
         data = self._http.put(f"{_BASE}/{rule_id}", payload)
-        return to_domain(data=data["data"], cls=CapacityRule)
+        obj = data.get("data", data) if isinstance(data, dict) else data
+        return to_domain(data=obj, cls=CapacityRule)
 
     def delete(self, rule_id: str) -> None:
         self._http.delete(f"{_BASE}/{rule_id}")

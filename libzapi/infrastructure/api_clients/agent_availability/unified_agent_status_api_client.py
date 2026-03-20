@@ -9,15 +9,17 @@ _BASE = "/api/v2/agent_availabilities/agent_statuses"
 
 
 def _flatten_status(item: dict) -> dict:
-    """Flatten JSON:API status object into a flat dict."""
-    flat = {"id": item["id"]}
-    attrs = item.get("attributes", {})
-    flat["name"] = attrs.get("name", "")
-    flat["description"] = attrs.get("description")
-    flat["group_ids"] = attrs.get("group_ids", [])
-    flat["channels"] = attrs.get("channels")
-    flat["updated_at"] = item.get("updated_at")
-    return flat
+    """Flatten JSON:API status object into a flat dict. Handles both nested and flat formats."""
+    if "attributes" in item:
+        attrs = item["attributes"]
+        flat = {"id": item["id"]}
+        flat["name"] = attrs.get("name", "")
+        flat["description"] = attrs.get("description")
+        flat["group_ids"] = attrs.get("group_ids", [])
+        flat["channels"] = attrs.get("channels")
+        flat["updated_at"] = attrs.get("updated_at")
+        return flat
+    return item
 
 
 class UnifiedAgentStatusApiClient:
@@ -29,18 +31,18 @@ class UnifiedAgentStatusApiClient:
     def list_all(self) -> list[UnifiedAgentStatus]:
         data = self._http.get(_BASE)
         results = []
-        for item in data.get("default", []):
+        for item in data.get("default_statuses", data.get("default", [])):
             results.append(to_domain(data=_flatten_status(item), cls=UnifiedAgentStatus))
-        for item in data.get("custom", []):
+        for item in data.get("custom_statuses", data.get("custom", [])):
             results.append(to_domain(data=_flatten_status(item), cls=UnifiedAgentStatus))
         return results
 
     def list_me(self) -> list[UnifiedAgentStatus]:
         data = self._http.get(f"{_BASE}/me")
         results = []
-        for item in data.get("default", []):
+        for item in data.get("default_statuses", data.get("default", [])):
             results.append(to_domain(data=_flatten_status(item), cls=UnifiedAgentStatus))
-        for item in data.get("custom", []):
+        for item in data.get("custom_statuses", data.get("custom", [])):
             results.append(to_domain(data=_flatten_status(item), cls=UnifiedAgentStatus))
         return results
 
