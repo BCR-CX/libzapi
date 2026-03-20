@@ -13,4 +13,5 @@ wheels/
 .coverage
 coverage-reports
 .hypothesis
+docs/_build/
 CLAUDE.md
