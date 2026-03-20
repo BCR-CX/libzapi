@@ -1,118 +1,233 @@
 [![Build](https://github.com/BCR-CX/libzapi/actions/workflows/build.yml/badge.svg)](https://github.com/BCR-CX/libzapi/actions/workflows/build.yml)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=alert_status&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=bugs&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=code_smells&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=coverage&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=duplicated_lines_density&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=ncloc&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=reliability_rating&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=security_rating&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=security_rating&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=sqale_rating&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
-[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=vulnerabilities&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=BCR-CX_libzapi&metric=alert_status&token=5382993ce4e5b6d8b65848ab77a971e2b51077ae)](https://sonarcloud.io/summary/new_code?id=BCR-CX_libzapi)
 
-# Libzapi - The Official BCR.CX API Client for Zendesk
+# libzapi — Python SDK for the Zendesk API
 
-LibZapi is a powerful and easy-to-use API client designed specifically for interacting with the Zendesk. It simplifies the
-process of managing customer support tickets, automating workflows, and retrieving data from Zendesk, making it an
-essential tool for developers and support teams.
+A typed, batteries-included Python client for Zendesk. Handles authentication, pagination, retries, and error mapping so you can focus on your integration.
 
-## 📐 Architectural Layers
-
-LibZapi follows a lightweight Domain-Driven Design (DDD) structure with inspiration from CQRS (Command-Query Responsibility
-Segregation).
-Even though it’s an SDK, this separation keeps models clear, testable, and easy to extend.
-
-| **Layer**          | **Concern / Responsibility**                                                                                                                                                 | **Example Classes / Modules**                                                |
-|--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------|
-| **SDK Interface**  | Public entry point for consumers. Exposes simple, zendesk APIs (e.g., `Ticketing`, `HelpCenter`, `Messaging`). Converts inputs into commands.                                | `libzapi.Ticketing`, `libzapi.HelpCenter`                                       |
-| **Application**    | Coordinates use cases. Contains **Commands** and **Services** that implement the SDK’s operations. Responsible for mapping inputs to payloads and orchestrating infra calls. | `CreateUserFieldCmd`, `UpdateGroupCmd`, `UserFieldsService`, `GroupsService` |
-| **Domain**         | Defines core business concepts and rules, independent of Zendesk’s API format. Contains entities, value objects, and domain services that enforce invariants.                | `libzapi.domain.models.ticketing.brand.py`, `libzapi.domain.errors.py`             |
-| **Infrastructure** | Handles all external integration logic. Encapsulates API clients, request signing, and serialization details.                                                                | `UserFieldsApiClient`, `HttpClient`, `Mappers`                               |
-
-🔄 Example Flow
-
-```text
-User calls libzapi.Ticketing(...).groups.list_all()
-        ↓
-SDK Interface: forwards call to GroupsService
-        ↓
-Application: GroupsService invokes GroupsApiClient to fetch data
-        ↓
-Infrastructure: GroupsApiClient executes HTTP GET to Zendesk API
-        ↓
-Domain: maps JSON into Group domain entities
-        ↓
-Returns List[Group] to the SDK user
-```
-
-## Getting Started
-
-Clone the repository and install the dependencies:
+## Installation
 
 ```bash
-git clone https://github.com/BCR-CX/zapi.git
-cd libzapi
+pip install libzapi
 ```
 
-Install uv
+Requires Python 3.12+.
 
-```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source $HOME/.local/bin/env
+## Quick Start
+
+**Email + API token:**
+
+```python
+from libzapi import Ticketing
+
+ticketing = Ticketing(
+    base_url="https://yourcompany.zendesk.com",
+    email="you@company.com",
+    api_token="your_api_token",
+)
 ```
 
-Install Python version 3.12
+**OAuth:**
 
-```bash
-uv python install 3.12
+```python
+ticketing = Ticketing(
+    base_url="https://yourcompany.zendesk.com",
+    oauth_token="your_oauth_token",
+)
 ```
 
-Check that uv is installed
+All three entry points (`Ticketing`, `HelpCenter`, `CustomData`) accept the same auth arguments.
 
-```bash
-uv --version
+## Ticketing
+
+```python
+from libzapi import Ticketing
+
+tk = Ticketing("https://acme.zendesk.com", email="a@b.com", api_token="tok")
+
+# List tickets — pagination is automatic
+for ticket in tk.tickets.list():
+    print(ticket.id, ticket.subject)
+
+# Get a single ticket
+ticket = tk.tickets.get(ticket_id=12345)
+
+# Create a ticket
+new_ticket = tk.tickets.create(
+    subject="Printer on fire",
+    description="The printer on floor 3 is literally on fire.",
+    priority="urgent",
+    tags=["hardware", "fire"],
+)
+
+# Update a ticket
+tk.tickets.update(ticket_id=new_ticket.id, priority="high", tags=["resolved"])
+
+# Create with custom fields
+tk.tickets.create(
+    subject="Custom field example",
+    description="Body text",
+    custom_fields=[{"id": 123, "value": "abc"}],
+)
+
+# Search organizations
+for org in tk.organizations.search(name="Acme"):
+    print(org.id, org.name)
+
+# List groups
+for group in tk.groups.list_all():
+    print(group.id, group.name)
 ```
 
-As a smoke test run
+## Help Center
 
-```bash
-uv run pytest tests/unit
+```python
+from libzapi import HelpCenter
+
+hc = HelpCenter("https://acme.zendesk.com", email="a@b.com", api_token="tok")
+
+# List all articles
+for article in hc.articles.list_all():
+    print(article.id, article.title)
+
+# Articles by locale
+for article in hc.articles.list_all_by_locale("en-us"):
+    print(article.title)
+
+# Incremental export (unix timestamp)
+for article in hc.articles.list_incremental(start_time=1700000000):
+    print(article.title)
+
+# Categories CRUD
+category = hc.categories.create(
+    name="Billing", locale="en-us", description="Billing articles", position=1
+)
+hc.categories.update(category.id, name="Billing & Payments", description="Updated", position=1)
+hc.categories.delete(category.id)
+
+# Sections
+section = hc.sections.create(
+    category_id=category.id, name="Invoices", locale="en-us", description="Invoice help", position=1
+)
+hc.sections.delete(section.id)
 ```
 
-If you get the green light, you are ready to go!
+## Custom Objects
 
-## Steps to add a new API endpoint
+```python
+from libzapi import CustomData
 
-1. **Identify the Endpoint**: Determine the Zendesk API endpoint you want to add support for. Refer to
-   the [Zendesk API documentation](https://developer.zendesk.com/api-reference/) for details.
-2. **Start on domain/models**: Create a new model class that represents the data structure returned by the API endpoint.
-   Use existing models as references for naming conventions and structure.
-3. **Go to infrastructure/mappers**: Implement a mapper class that converts the raw API responses into the model classes
-   you created earlier. This class should handle any necessary data transformations.
-4. **Go to infrastructure/api_clients**: Create a new API client class that implements the service contract interface.
-   This class should handle the actual HTTP requests to the Zendesk API, using the appropriate HTTP methods and
-   endpoints. Important. If your request has pagination, make sure to implement the pagination "yield_items" function.
-5. **Go to application/services**: Implement a service class that uses the API client to perform operations related to
-   the new endpoint. This class should contain easy to read methods that encapsulate the logic for interacting with the
-   API.
-6. **Write Tests**: Create unit tests for your new models, mappers, API clients, and services. Ensure that all tests
-   pass before proceeding.
-7. **Update Documentation**: Update the README.md file to include information about the new endpoint, including usage
-   examples and any relevant details.
-8. **Commit and Push**: Commit your changes to the repository and push them to the appropriate branch. Create a pull
-   request for review.
-9. **Review and Merge**: Have your code reviewed by a team member. Once approved, merge the changes into the main
-   branch.
+cd = CustomData("https://acme.zendesk.com", email="a@b.com", api_token="tok")
 
-### Why go through all these steps?
+# List custom objects
+for obj in cd.custom_objects.list_all():
+    print(obj.key, obj.title)
 
-Following these steps ensures that the new API endpoint is integrated into libzapi in a consistent and maintainable manner.
-It helps maintain code quality, promotes reusability, and ensures that the new functionality is well-tested and
-documented for future reference.
+# Get a specific object
+obj = cd.custom_objects.get("my_object")
 
-## Testing
+# List fields for an object
+for field in cd.custom_object_fields.list_all("my_object"):
+    print(field.key, field.type)
 
-Testing uses pytest.
-There's also a cool package called hypothesis that does property based testing. As some Zendesk objects has a lot of
-fields, this makes testing easier.
+# Query records with sort and filter
+for record in cd.custom_object_records.list_all(
+    custom_object_key="my_object",
+    sort_type="updated_at",
+    sort_order="desc",
+    page_size=50,
+):
+    print(record.id, record.name)
+```
+
+## Error Handling
+
+libzapi raises typed exceptions for Zendesk API errors:
+
+```python
+from libzapi.domain.errors import ZapiError, NotFound, Unauthorized, RateLimited, UnprocessableEntity
+
+try:
+    ticket = tk.tickets.get(ticket_id=99999999)
+except NotFound:
+    print("Ticket does not exist")
+except Unauthorized:
+    print("Check your credentials")
+except RateLimited:
+    print("Too many requests — SDK retries automatically, but limit was exceeded")
+except UnprocessableEntity as e:
+    print("Validation error:", e)
+except ZapiError as e:
+    print("Unexpected API error:", e)
+```
+
+## Pagination
+
+Pagination is transparent. Methods that return collections yield items lazily — the SDK fetches the next page automatically when needed. Both cursor-based and offset pagination are supported depending on the Zendesk endpoint.
+
+```python
+# Just iterate — no page management needed
+for ticket in tk.tickets.list():
+    process(ticket)
+```
+
+## Retries
+
+The HTTP client automatically retries on `429` (rate limited) and `5xx` errors with exponential backoff (up to 5 retries). The `Retry-After` header is respected.
+
+## Available Services
+
+### Ticketing
+
+| Service | Attribute | Description |
+|---------|-----------|-------------|
+| Account Settings | `account_settings` | Account configuration |
+| Attachments | `attachments` | File attachments |
+| Automations | `automations` | Automation rules |
+| Brands | `brands` | Brand management |
+| Brand Agents | `brand_agents` | Brand-agent assignments |
+| Email Notifications | `email_notifications` | Email notification settings |
+| Groups | `groups` | Agent groups |
+| Macros | `macros` | Macro management |
+| Organizations | `organizations` | Organization management |
+| Requests | `requests` | End-user requests |
+| Schedules | `schedules` | Business schedules |
+| Sessions | `sessions` | User sessions |
+| SLA Policies | `sla_policies` | SLA policy management |
+| Support Addresses | `support_addresses` | Support email addresses |
+| Suspended Tickets | `suspended_tickets` | Suspended ticket management |
+| Tickets | `tickets` | Ticket CRUD and queries |
+| Ticket Audits | `ticket_audits` | Ticket audit logs |
+| Ticket Fields | `ticket_fields` | Ticket field definitions |
+| Ticket Forms | `ticket_forms` | Ticket form management |
+| Ticket Metrics | `ticket_metrics` | Ticket metrics |
+| Ticket Triggers | `ticket_triggers` | Trigger rules |
+| Ticket Trigger Categories | `ticket_trigger_categories` | Trigger categorization |
+| Users | `users` | User management |
+| User Fields | `user_fields` | User field definitions |
+| Views | `views` | View management |
+| Workspaces | `workspaces` | Agent workspaces |
+
+### Help Center
+
+| Service | Attribute | Description |
+|---------|-----------|-------------|
+| Account Custom Claims | `account_custom_claims` | Custom JWT claims |
+| Articles | `articles` | Article listing and export |
+| Article Attachments | `articles_attachments` | Article file attachments |
+| Categories | `categories` | Category CRUD |
+| Sections | `sections` | Section CRUD |
+| User Segments | `user_segments` | User segment management |
+
+### Custom Data
+
+| Service | Attribute | Description |
+|---------|-----------|-------------|
+| Custom Objects | `custom_objects` | Custom object definitions |
+| Custom Object Fields | `custom_object_fields` | Field definitions per object |
+| Custom Object Records | `custom_object_records` | Record CRUD and queries |
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for architecture details, development setup, and how to add new endpoints.

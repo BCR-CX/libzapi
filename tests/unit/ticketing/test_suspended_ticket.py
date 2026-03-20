@@ -1,6 +1,8 @@
+import pytest
 from hypothesis import given
 from hypothesis.strategies import just, builds
 
+from libzapi.domain.errors import NotFound, RateLimited, Unauthorized, UnprocessableEntity
 from libzapi.domain.models.ticketing.suspended_ticket import SuspendedTicket
 from libzapi.infrastructure.api_clients.ticketing import SuspendedTicketApiClient
 
@@ -44,3 +46,23 @@ def test_suspended_ticket_api_client_list_all(mocker):
     list(method())
 
     https.get.assert_called_with("/api/v2/suspended_tickets")
+
+
+@pytest.mark.parametrize(
+    "error_cls",
+    [
+        pytest.param(Unauthorized, id="401"),
+        pytest.param(NotFound, id="404"),
+        pytest.param(UnprocessableEntity, id="422"),
+        pytest.param(RateLimited, id="429"),
+    ],
+)
+def test_suspended_ticket_api_client_raises_on_http_error(error_cls, mocker):
+    https = mocker.Mock()
+    https.base_url = "https://example.zendesk.com"
+    https.get.side_effect = error_cls("error")
+
+    client = SuspendedTicketApiClient(https)
+
+    with pytest.raises(error_cls):
+        client.get(1)

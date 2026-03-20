@@ -7,14 +7,20 @@ def test_list_and_get(ticketing: Ticketing):
     item = ticketing.tickets.get(items[0].id)
     assert item.id == items[0].id
 
+
 def test_create_and_update_ticket(ticketing: Ticketing):
-    ticket = ticketing.tickets.create(subject="Test ticket", description="Test ticket description", custom_fields=[
-        {"id": 35650075609748, "value": "Test value"},
-        {"id": 35650075985428, "value": "Test value 2"}
-    ])
+    fields = list(ticketing.ticket_fields.list_all())
+    custom_fields = [{"id": f.id, "value": "Test value"} for f in fields[:2] if f.type == "text"]
+
+    ticket = ticketing.tickets.create(
+        subject="Test ticket",
+        description="Test ticket description",
+        custom_fields=custom_fields,
+    )
     assert ticket.subject == "Test ticket"
     updated_ticket = ticketing.tickets.update(ticket_id=ticket.id, subject="Updated ticket")
     assert updated_ticket.subject == "Updated ticket"
+
 
 def test_create_many(ticketing: Ticketing):
     many = ticketing.tickets.create_many(

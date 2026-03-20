@@ -1,7 +1,7 @@
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from libzapi.domain.errors import Unauthorized, NotFound, RateLimited
+from libzapi.domain.errors import Unauthorized, NotFound, RateLimited, UnprocessableEntity
 
 
 class HttpClient:
@@ -50,6 +50,8 @@ class HttpClient:
             raise Unauthorized(resp.text)
         if resp.status_code == 404:
             raise NotFound(resp.text)
+        if resp.status_code == 422:
+            raise UnprocessableEntity(resp.text)
         if resp.status_code == 429:
             raise RateLimited(resp.text)
         resp.raise_for_status()
