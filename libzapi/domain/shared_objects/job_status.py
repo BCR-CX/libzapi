@@ -8,6 +8,7 @@ class JobResult:
     id: str
     account_id: int
 
+
 @dataclass(frozen=True, slots=True)
 class JobStatus:
     id: str

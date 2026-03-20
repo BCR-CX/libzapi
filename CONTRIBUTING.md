@@ -20,7 +20,7 @@ Install Python 3.12 and project dependencies:
 
 ```bash
 uv python install 3.12
-uv sync
+uv sync --all-extras
 ```
 
 Run the unit tests as a smoke test:
@@ -105,6 +105,36 @@ Integration tests require these environment variables:
 - `ZENDESK_URL`
 - `ZENDESK_EMAIL`
 - `ZENDESK_TOKEN`
+
+## Setup with Makefile
+
+Alternatively, you can use the Makefile. Requirements:
+
+- GNU Make
+- Python 3.12
+- pre-commit (optional; the Makefile installs it with pip if missing)
+
+```bash
+# Create .venv and install deps
+make
+
+# OR
+make build
+```
+
+```bash
+# Format all code
+make fmt
+
+# Check code
+make lint
+```
+
+You can also use pre-commit directly:
+
+```bash
+pre-commit run -a # --all-files
+```
 
 ## Code Style
 

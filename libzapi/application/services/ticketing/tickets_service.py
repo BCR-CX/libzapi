@@ -63,36 +63,59 @@ class TickestService:
     def user_assigned_count(self, user_id: int) -> CountSnapshot:
         return self._client.user_assigned_count(user_id=user_id)
 
-    def create(self, subject: str,
-               description: str,
-               tags: Iterable[str] = (),
-               custom_fields: Iterable[dict] = (),
-               priority: str = "",
-               ticket_type: str = "",
-               group_id: int = None,
-               requester_id: int = None,
-               organization_id: int = None,
-               problem_id: int = None,
-               ticket_form_id: int = None,
-               brand_id: int = None,
-               ) -> Ticket:
+    def create(
+        self,
+        subject: str,
+        description: str,
+        tags: Iterable[str] = (),
+        custom_fields: Iterable[dict] = (),
+        priority: str = "",
+        ticket_type: str = "",
+        group_id: int = None,
+        requester_id: int = None,
+        organization_id: int = None,
+        problem_id: int = None,
+        ticket_form_id: int = None,
+        brand_id: int = None,
+    ) -> Ticket:
         fields = []
         for custom_field in custom_fields:
-            field = CustomField(
-                id=custom_field["id"],
-                value=custom_field["value"]
-            )
+            field = CustomField(id=custom_field["id"], value=custom_field["value"])
             fields.append(field)
 
-        entity = self.cast_to_ticket_command(CreateTicketCmd, brand_id, description, fields, group_id, organization_id, priority,
-                                             problem_id, requester_id, subject, tags, ticket_form_id, ticket_type)
+        entity = self.cast_to_ticket_command(
+            CreateTicketCmd,
+            brand_id,
+            description,
+            fields,
+            group_id,
+            organization_id,
+            priority,
+            problem_id,
+            requester_id,
+            subject,
+            tags,
+            ticket_form_id,
+            ticket_type,
+        )
         return self._client.create_ticket(entity=entity)
 
     @staticmethod
-    def cast_to_ticket_command(cmd_type, brand_id: int | None, description: str, fields: Iterable[CustomField], group_id: int | None,
-                               organization_id: int | None, priority: str, problem_id: int | None,
-                               requester_id: int | None, subject: str, tags: Iterable[str], ticket_form_id: int | None,
-                               ticket_type: str) -> TicketCmd:
+    def cast_to_ticket_command(
+        cmd_type,
+        brand_id: int | None,
+        description: str,
+        fields: Iterable[CustomField],
+        group_id: int | None,
+        organization_id: int | None,
+        priority: str,
+        problem_id: int | None,
+        requester_id: int | None,
+        subject: str,
+        tags: Iterable[str],
+        ticket_form_id: int | None,
+        ticket_type: str,
+    ) -> TicketCmd:
         entity = cmd_type(
             subject=subject,
             custom_fields=fields,
@@ -112,35 +135,49 @@ class TickestService:
     def show_multiple_tickets(self, ticket_ids: Iterable[int]) -> Iterable[Ticket]:
         return self._client.show_multiple_tickets(ticket_ids=ticket_ids)
 
-    def update(self, ticket_id:int, subject: str = None,
-               description: str = None,
-               tags: Iterable[str] = (),
-               custom_fields: Iterable[dict] = (),
-               priority: str = "",
-               ticket_type: str = "",
-               group_id: int = None,
-               requester_id: int = None,
-               organization_id: int = None,
-               problem_id: int = None,
-               ticket_form_id: int = None,
-               brand_id: int = None,
-               ) -> Ticket:
+    def update(
+        self,
+        ticket_id: int,
+        subject: str = None,
+        description: str = None,
+        tags: Iterable[str] = (),
+        custom_fields: Iterable[dict] = (),
+        priority: str = "",
+        ticket_type: str = "",
+        group_id: int = None,
+        requester_id: int = None,
+        organization_id: int = None,
+        problem_id: int = None,
+        ticket_form_id: int = None,
+        brand_id: int = None,
+    ) -> Ticket:
         fields = []
         for custom_field in custom_fields:
-            field = CustomField(
-                id=custom_field["id"],
-                value=custom_field["value"]
-            )
+            field = CustomField(id=custom_field["id"], value=custom_field["value"])
             fields.append(field)
 
-        entity = self.cast_to_ticket_command(UpdateTicketCmd, brand_id, description, fields, group_id, organization_id, priority,
-                                             problem_id, requester_id, subject, tags, ticket_form_id, ticket_type)
+        entity = self.cast_to_ticket_command(
+            UpdateTicketCmd,
+            brand_id,
+            description,
+            fields,
+            group_id,
+            organization_id,
+            priority,
+            problem_id,
+            requester_id,
+            subject,
+            tags,
+            ticket_form_id,
+            ticket_type,
+        )
         return self._client.update_ticket(ticket_id=ticket_id, entity=entity)
 
     def create_many(self, dict_input: Iterable[dict]) -> Iterable[Ticket]:
         entity = []
         for item in dict_input:
-            record = self.cast_to_ticket_command(CreateTicketCmd,
+            record = self.cast_to_ticket_command(
+                CreateTicketCmd,
                 brand_id=item.get("brand_id"),
                 description=item["description"],
                 fields=[CustomField(id=cf["id"], value=cf["value"]) for cf in item.get("custom_fields", [])],
@@ -152,7 +189,7 @@ class TickestService:
                 subject=item["subject"],
                 tags=item.get("tags", ()),
                 ticket_form_id=item.get("ticket_form_id"),
-                ticket_type=item.get("type", "")
+                ticket_type=item.get("type", ""),
             )
             entity.append(record)
         return self._client.create_many(entity=entity)
