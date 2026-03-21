@@ -1,7 +1,8 @@
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
-from libzapi.domain.errors import Unauthorized, NotFound, RateLimited, UnprocessableEntity
+
+from libzapi.domain.errors import NotFound, RateLimited, Unauthorized, UnprocessableEntity
 
 
 class HttpClient:
@@ -42,6 +43,17 @@ class HttpClient:
 
     def patch(self, path: str, json: dict) -> dict:
         resp = self.session.patch(f"{self.base_url}{path}", json=json, timeout=self.timeout)
+        self._raise(resp)
+        return resp.json()
+
+    def post_multipart(self, path: str, files: dict, data: dict | None = None) -> dict:
+        resp = self.session.post(
+            f"{self.base_url}{path}",
+            files=files,
+            data=data,
+            headers={"Content-Type": None},
+            timeout=self.timeout,
+        )
         self._raise(resp)
         return resp.json()
 

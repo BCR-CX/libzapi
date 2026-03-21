@@ -21,13 +21,13 @@ class Post:
     updated_at: datetime | None
     url: str
     featured: bool
-    pinned: bool
     closed: bool
-    frozen: bool
     status: str
-    non_author_edit_id: List[int] | None
-    non_author_updated_at: datetime | None
-    content_tag_ids: List[str] | None
+    pinned: bool = False
+    frozen: bool = False
+    non_author_edit_id: List[int] | None = None
+    non_author_updated_at: datetime | None = None
+    content_tag_ids: List[str] | None = None
 
     @property
     def logical_key(self) -> LogicalKey:

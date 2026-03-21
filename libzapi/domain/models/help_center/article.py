@@ -32,7 +32,6 @@ class Article:
     content_tag_ids: list[str]
     label_names: list[str]
     body: str | None
-    user_segment_id: int | None
     user_segment_ids: Optional[list[int]] = None
 
     @property

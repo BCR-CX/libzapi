@@ -6,8 +6,8 @@ from libzapi.domain.shared_objects.logical_key import LogicalKey
 
 @dataclass(frozen=True, slots=True)
 class BadgeCategory:
-    id: int
-    brand_id: int  # For consistency with other models, although Zendesk uses string IDs here
+    id: str
+    brand_id: str
     name: str
     slug: str
     created_at: datetime | None

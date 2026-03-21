@@ -6,7 +6,7 @@ from libzapi.domain.shared_objects.logical_key import LogicalKey
 
 @dataclass(frozen=True, slots=True)
 class ContentTag:
-    id: int
+    id: str
     name: str
     created_at: datetime | None
     updated_at: datetime | None
