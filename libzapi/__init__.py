@@ -4,6 +4,7 @@ from libzapi.application import CustomData
 from libzapi.application import AgentAvailability
 from libzapi.application import AssetManagement
 from libzapi.application import ZendeskStatus
+from libzapi.application import WorkforceManagement
 
 __all__ = [
     "HelpCenter",
@@ -12,4 +13,5 @@ __all__ = [
     "AgentAvailability",
     "AssetManagement",
     "ZendeskStatus",
+    "WorkforceManagement",
 ]
