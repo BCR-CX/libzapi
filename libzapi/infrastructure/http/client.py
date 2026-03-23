@@ -26,8 +26,22 @@ class HttpClient:
         self.session.mount("https://", adapter)
         self.timeout = timeout
 
-    def get(self, path: str) -> dict:
-        resp = self.session.get(f"{self.base_url}{path}", timeout=self.timeout)
+    def get(self, path: str, params: dict | None = None) -> dict:
+        resp = self.session.get(f"{self.base_url}{path}", params=params, timeout=self.timeout)
+        self._raise(resp)
+        return resp.json()
+
+    def get_raw(self, url: str) -> dict:
+        """GET with a pre-built URL, bypassing query-param encoding.
+
+        Some APIs (e.g. Sunshine Conversations) require literal brackets
+        in query parameters like ``page[size]`` which ``requests``
+        would otherwise percent-encode.
+        """
+        req = requests.Request("GET", url, headers=self.session.headers)
+        prepared = req.prepare()
+        prepared.url = url  # override to prevent percent-encoding of brackets
+        resp = self.session.send(prepared, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 

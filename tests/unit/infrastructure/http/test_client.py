@@ -72,7 +72,9 @@ def test_get_returns_json(mocker):
 
     result = client.get("/api/v2/tickets/1.json")
 
-    client.session.get.assert_called_once_with("https://example.zendesk.com/api/v2/tickets/1.json", timeout=30.0)
+    client.session.get.assert_called_once_with(
+        "https://example.zendesk.com/api/v2/tickets/1.json", params=None, timeout=30.0
+    )
     assert result == {"ticket": {"id": 1}}
 
 
