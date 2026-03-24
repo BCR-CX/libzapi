@@ -1,52 +1,71 @@
+import time
+
 import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
 from libzapi.domain.errors import NotFound, RateLimited, Unauthorized, UnprocessableEntity
 
+CONNECTION_MAX_AGE = 300  # 5 minutes
+
 
 class HttpClient:
     def __init__(self, base_url: str, headers: dict[str, str], timeout: float = 30.0) -> None:
         self.base_url = base_url.rstrip("/")
-        self.session = requests.Session()
-        self.session.headers.update(
-            {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-                **headers,
-            }
-        )
-        retry = Retry(
+        self._headers = {
+            "Accept": "application/json",
+            "Content-Type": "application/json",
+            **headers,
+        }
+        self._retry = Retry(
             total=5,
             backoff_factor=0.3,
             status_forcelist=[429, 500, 502, 503, 504],
             respect_retry_after_header=True,
         )
-        adapter = HTTPAdapter(max_retries=retry)
-        self.session.mount("https://", adapter)
         self.timeout = timeout
+        self._last_refresh = 0.0
+        self.session = self._new_session()
+
+    def _new_session(self) -> requests.Session:
+        session = requests.Session()
+        session.headers.update(self._headers)
+        adapter = HTTPAdapter(max_retries=self._retry)
+        session.mount("https://", adapter)
+        self._last_refresh = time.monotonic()
+        return session
+
+    def _refresh_if_stale(self) -> None:
+        if time.monotonic() - self._last_refresh > CONNECTION_MAX_AGE:
+            self.session.close()
+            self.session = self._new_session()
 
     def get(self, path: str) -> dict:
+        self._refresh_if_stale()
         resp = self.session.get(f"{self.base_url}{path}", timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def post(self, path: str, json: dict) -> dict:
+        self._refresh_if_stale()
         resp = self.session.post(f"{self.base_url}{path}", json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def put(self, path: str, json: dict) -> dict:
+        self._refresh_if_stale()
         resp = self.session.put(f"{self.base_url}{path}", json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def patch(self, path: str, json: dict) -> dict:
+        self._refresh_if_stale()
         resp = self.session.patch(f"{self.base_url}{path}", json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def post_multipart(self, path: str, files: dict, data: dict | None = None) -> dict:
+        self._refresh_if_stale()
         resp = self.session.post(
             f"{self.base_url}{path}",
             files=files,
@@ -58,6 +77,7 @@ class HttpClient:
         return resp.json()
 
     def delete(self, path: str) -> None:
+        self._refresh_if_stale()
         resp = self.session.delete(f"{self.base_url}{path}", timeout=self.timeout)
         self._raise(resp)
 
