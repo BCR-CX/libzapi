@@ -1,4 +1,5 @@
 import time
+from http.client import RemoteDisconnected
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -40,9 +41,17 @@ class HttpClient:
             self.session.close()
             self.session = self._new_session()
 
-    def get(self, path: str, params: dict | None = None) -> dict:
+    def _request(self, method: str, path: str, **kwargs) -> requests.Response:
         self._refresh_if_stale()
-        resp = self.session.get(f"{self.base_url}{path}", params=params, timeout=self.timeout)
+        try:
+            return self.session.request(method, f"{self.base_url}{path}", **kwargs)
+        except (requests.ConnectionError, RemoteDisconnected):
+            self.session.close()
+            self.session = self._new_session()
+            return self.session.request(method, f"{self.base_url}{path}", **kwargs)
+
+    def get(self, path: str, params: dict | None = None) -> dict:
+        resp = self._request("GET", path, params=params, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
@@ -62,27 +71,24 @@ class HttpClient:
         return resp.json()
 
     def post(self, path: str, json: dict) -> dict:
-        self._refresh_if_stale()
-        resp = self.session.post(f"{self.base_url}{path}", json=json, timeout=self.timeout)
+        resp = self._request("POST", path, json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def put(self, path: str, json: dict) -> dict:
-        self._refresh_if_stale()
-        resp = self.session.put(f"{self.base_url}{path}", json=json, timeout=self.timeout)
+        resp = self._request("PUT", path, json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def patch(self, path: str, json: dict) -> dict:
-        self._refresh_if_stale()
-        resp = self.session.patch(f"{self.base_url}{path}", json=json, timeout=self.timeout)
+        resp = self._request("PATCH", path, json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def post_multipart(self, path: str, files: dict, data: dict | None = None) -> dict:
-        self._refresh_if_stale()
-        resp = self.session.post(
-            f"{self.base_url}{path}",
+        resp = self._request(
+            "POST",
+            path,
             files=files,
             data=data,
             headers={"Content-Type": None},
@@ -92,8 +98,7 @@ class HttpClient:
         return resp.json()
 
     def delete(self, path: str) -> None:
-        self._refresh_if_stale()
-        resp = self.session.delete(f"{self.base_url}{path}", timeout=self.timeout)
+        resp = self._request("DELETE", path, timeout=self.timeout)
         self._raise(resp)
 
     @staticmethod
