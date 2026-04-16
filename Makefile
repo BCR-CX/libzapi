@@ -9,12 +9,12 @@ UV:=$(VENV)/bin/uv
 PRE_COMMIT_LOC:=$(VENV)/.custom_pre_commit_installed
 
 ifeq ($(shell python --version | grep -E $(PY_VERSION) 2> /dev/null),)
-	$(error Python $(PY_VERSION) not found)
+$(error Python $(PY_VERSION) not found)
 endif
 
 PRE_COMMIT=$(VENV)/bin/pre-commit
 ifneq ($(shell which pre-commit 2> /dev/null),)
-	PRE_COMMIT=pre-commit
+PRE_COMMIT=pre-commit
 endif
 
 .PHONY: all

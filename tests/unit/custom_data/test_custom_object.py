@@ -116,3 +116,87 @@ def test_custom_object_api_client_limit_raises_on_http_error(error_cls, mocker):
 
     with pytest.raises(error_cls):
         client.limit()
+
+
+MODULE = "libzapi.infrastructure.api_clients.custom_data.custom_object"
+
+
+def test_create_calls_correct_path(mocker):
+    mocker.patch(f"{MODULE}.to_domain", return_value=mocker.Mock())
+    mocker.patch(f"{MODULE}.to_payload_create", return_value={"custom_object": {"key": "car"}})
+    https = mocker.Mock()
+    https.base_url = "https://example.zendesk.com"
+    https.post.return_value = {"custom_object": {}}
+    client = CustomObjectApiClient(https)
+    client.create(mocker.Mock())
+    https.post.assert_called_with("/api/v2/custom_objects", json={"custom_object": {"key": "car"}})
+
+
+def test_update_calls_correct_path(mocker):
+    mocker.patch(f"{MODULE}.to_domain", return_value=mocker.Mock())
+    mocker.patch(f"{MODULE}.to_payload_update", return_value={"custom_object": {"title": "Car"}})
+    https = mocker.Mock()
+    https.base_url = "https://example.zendesk.com"
+    https.patch.return_value = {"custom_object": {}}
+    client = CustomObjectApiClient(https)
+    client.update("car", mocker.Mock())
+    https.patch.assert_called_with("/api/v2/custom_objects/car", json={"custom_object": {"title": "Car"}})
+
+
+def test_delete_calls_correct_path(mocker):
+    https = mocker.Mock()
+    https.base_url = "https://example.zendesk.com"
+    client = CustomObjectApiClient(https)
+    client.delete("car")
+    https.delete.assert_called_with("/api/v2/custom_objects/car")
+
+
+@pytest.mark.parametrize(
+    "error_cls",
+    [
+        pytest.param(Unauthorized, id="401"),
+        pytest.param(NotFound, id="404"),
+        pytest.param(UnprocessableEntity, id="422"),
+        pytest.param(RateLimited, id="429"),
+    ],
+)
+def test_create_raises_on_http_error(error_cls, mocker):
+    https = mocker.Mock()
+    https.post.side_effect = error_cls("error")
+    client = CustomObjectApiClient(https)
+    with pytest.raises(error_cls):
+        client.create(mocker.Mock())
+
+
+@pytest.mark.parametrize(
+    "error_cls",
+    [
+        pytest.param(Unauthorized, id="401"),
+        pytest.param(NotFound, id="404"),
+        pytest.param(UnprocessableEntity, id="422"),
+        pytest.param(RateLimited, id="429"),
+    ],
+)
+def test_update_raises_on_http_error(error_cls, mocker):
+    https = mocker.Mock()
+    https.patch.side_effect = error_cls("error")
+    client = CustomObjectApiClient(https)
+    with pytest.raises(error_cls):
+        client.update("car", mocker.Mock())
+
+
+@pytest.mark.parametrize(
+    "error_cls",
+    [
+        pytest.param(Unauthorized, id="401"),
+        pytest.param(NotFound, id="404"),
+        pytest.param(UnprocessableEntity, id="422"),
+        pytest.param(RateLimited, id="429"),
+    ],
+)
+def test_delete_raises_on_http_error(error_cls, mocker):
+    https = mocker.Mock()
+    https.delete.side_effect = error_cls("error")
+    client = CustomObjectApiClient(https)
+    with pytest.raises(error_cls):
+        client.delete("car")

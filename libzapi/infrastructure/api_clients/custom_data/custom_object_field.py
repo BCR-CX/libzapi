@@ -1,8 +1,17 @@
 from typing import Iterator
 
+from libzapi.application.commands.custom_data.custom_object_field_cmds import (
+    CreateCustomObjectFieldCmd,
+    UpdateCustomObjectFieldCmd,
+)
 from libzapi.domain.models.custom_data.custom_object_field import CustomObjectField
 from libzapi.infrastructure.http.client import HttpClient
 from libzapi.infrastructure.http.pagination import yield_items
+from libzapi.infrastructure.mappers.custom_data.custom_object_field_mapper import (
+    to_payload_create,
+    to_payload_reorder,
+    to_payload_update,
+)
 from libzapi.infrastructure.serialization.parse import to_domain
 
 
@@ -25,11 +34,19 @@ class CustomObjectFieldApiClient:
         data = self._http.get(f"/api/v2/custom_objects/{custom_object_key}/fields/{custom_object_field_id}")
         return to_domain(data=data["custom_object_field"], cls=CustomObjectField)
 
-    def create(self, payload: dict) -> CustomObjectField:
-        raise NotImplementedError
+    def create(self, custom_object_key: str, cmd: CreateCustomObjectFieldCmd) -> CustomObjectField:
+        payload = to_payload_create(cmd)
+        data = self._http.post(f"/api/v2/custom_objects/{custom_object_key}/fields", json=payload)
+        return to_domain(data=data["custom_object_field"], cls=CustomObjectField)
 
-    def update(self, custom_object_id: str, data: dict) -> CustomObjectField:
-        raise NotImplementedError
+    def update(self, custom_object_key: str, field_id: int, cmd: UpdateCustomObjectFieldCmd) -> CustomObjectField:
+        payload = to_payload_update(cmd)
+        data = self._http.patch(f"/api/v2/custom_objects/{custom_object_key}/fields/{field_id}", json=payload)
+        return to_domain(data=data["custom_object_field"], cls=CustomObjectField)
 
-    def delete(self, custom_object_id: str) -> CustomObjectField:
-        raise NotImplementedError
+    def delete(self, custom_object_key: str, field_id: int) -> None:
+        self._http.delete(f"/api/v2/custom_objects/{custom_object_key}/fields/{field_id}")
+
+    def reorder(self, custom_object_key: str, field_ids: list[int]) -> None:
+        payload = to_payload_reorder(field_ids)
+        self._http.put(f"/api/v2/custom_objects/{custom_object_key}/fields/reorder", json=payload)

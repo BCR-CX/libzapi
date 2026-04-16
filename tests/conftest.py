@@ -3,7 +3,7 @@ from typing import Type, TypeVar
 
 import pytest
 
-from libzapi import Ticketing, HelpCenter, CustomData, AgentAvailability, AssetManagement, Voice
+from libzapi import Ticketing, HelpCenter, CustomData, AgentAvailability, AssetManagement, Voice, WorkforceManagement
 
 T = TypeVar("T")
 
@@ -42,6 +42,12 @@ def asset_management():
 def voice():
     """Creates a real Voice client if environment variables are set."""
     return _generic_zendesk_client(Voice)
+
+
+@pytest.fixture(scope="session")
+def wfm():
+    """Creates a real WorkforceManagement client if environment variables are set."""
+    return _generic_zendesk_client(WorkforceManagement)
 
 
 def _generic_zendesk_client(client_cls: Type[T]) -> T:
