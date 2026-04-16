@@ -9,4 +9,7 @@ All domain models are frozen dataclasses with ``slots=True``.
    models/ticketing
    models/help_center
    models/custom_data
+   models/voice
+   models/conversations
+   models/wfm
    models/shared_objects

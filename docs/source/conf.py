@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("../.."))
 project = "libzapi"
 copyright = "2025, Leandro Meili"
 author = "Leandro Meili"
-release = "0.6.4"
+release = "0.9.0"
 
 # -- General configuration ---------------------------------------------------
 
