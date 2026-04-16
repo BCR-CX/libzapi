@@ -3,7 +3,7 @@ from typing import Type, TypeVar
 
 import pytest
 
-from libzapi import Ticketing, HelpCenter, CustomData, AgentAvailability, AssetManagement, Voice, WorkforceManagement
+from libzapi import Ticketing, HelpCenter, CustomData, AgentAvailability, AssetManagement, Conversations, Voice, WorkforceManagement
 
 T = TypeVar("T")
 
@@ -36,6 +36,20 @@ def agent_availability():
 def asset_management():
     """Creates a real Asset Management client if environment variables are set."""
     return _generic_zendesk_client(AssetManagement)
+
+
+@pytest.fixture(scope="session")
+def conversations():
+    """Creates a real Conversations client if environment variables are set."""
+    base_url = os.getenv("ZENDESK_URL")
+    key_id = os.getenv("SUNCO_KEY_ID")
+    key_secret = os.getenv("SUNCO_KEY_SECRET")
+    app_id = os.getenv("SUNCO_APP_ID")
+
+    if not (base_url and key_id and key_secret and app_id):
+        pytest.skip("Sunshine Conversations credentials not provided. Skipping live API tests.")
+
+    return Conversations(base_url=base_url, key_id=key_id, key_secret=key_secret, app_id=app_id)
 
 
 @pytest.fixture(scope="session")
