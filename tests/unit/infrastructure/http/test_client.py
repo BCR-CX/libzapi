@@ -271,3 +271,93 @@ def test_request_retry_failure_propagates(mocker):
 
     with pytest.raises(requests.ConnectionError, match="second"):
         client.get("/api/v2/tickets/1.json")
+
+
+# ---------------------------------------------------------------------------
+# GET raw
+# ---------------------------------------------------------------------------
+
+
+def test_get_raw_returns_json(mocker):
+    client = HttpClient("https://example.zendesk.com", headers={})
+    resp = _make_response(200, json_data={"items": [1, 2, 3]})
+    mocker.patch.object(client.session, "send", return_value=resp)
+
+    url = "https://example.zendesk.com/api/v2/items?page[size]=10&page[after]=abc"
+    result = client.get_raw(url)
+
+    assert result == {"items": [1, 2, 3]}
+    prepared = client.session.send.call_args[0][0]
+    assert prepared.url == url
+
+
+def test_get_raw_raises_on_error(mocker):
+    client = HttpClient("https://example.zendesk.com", headers={})
+    resp = _make_response(404, text="Not Found")
+    mocker.patch.object(client.session, "send", return_value=resp)
+
+    with pytest.raises(NotFound, match="Not Found"):
+        client.get_raw("https://example.zendesk.com/api/v2/items?page[size]=10")
+
+
+def test_get_raw_retries_on_connection_error(mocker):
+    client = HttpClient("https://example.zendesk.com", headers={})
+    resp = _make_response(200, json_data={"ok": True})
+
+    original_session = client.session
+    mocker.patch.object(original_session, "send", side_effect=requests.ConnectionError("Connection aborted"))
+    mocker.patch.object(original_session, "close")
+
+    new_session = Mock(spec=requests.Session)
+    new_session.send.return_value = resp
+    new_session.headers = original_session.headers
+    mocker.patch.object(client, "_new_session", return_value=new_session)
+
+    url = "https://example.zendesk.com/api/v2/items?page[size]=10"
+    result = client.get_raw(url)
+
+    original_session.close.assert_called_once()
+    assert client.session is new_session
+    prepared = new_session.send.call_args[0][0]
+    assert prepared.url == url
+    assert result == {"ok": True}
+
+
+def test_get_raw_retries_on_remote_disconnected(mocker):
+    client = HttpClient("https://example.zendesk.com", headers={})
+    resp = _make_response(200, json_data={"ok": True})
+
+    original_session = client.session
+    mocker.patch.object(
+        original_session,
+        "send",
+        side_effect=RemoteDisconnected("Remote end closed connection without response"),
+    )
+    mocker.patch.object(original_session, "close")
+
+    new_session = Mock(spec=requests.Session)
+    new_session.send.return_value = resp
+    new_session.headers = original_session.headers
+    mocker.patch.object(client, "_new_session", return_value=new_session)
+
+    result = client.get_raw("https://example.zendesk.com/api/v2/items?page[size]=10")
+
+    original_session.close.assert_called_once()
+    assert client.session is new_session
+    assert result == {"ok": True}
+
+
+def test_get_raw_retry_failure_propagates(mocker):
+    client = HttpClient("https://example.zendesk.com", headers={})
+
+    original_session = client.session
+    mocker.patch.object(original_session, "send", side_effect=requests.ConnectionError("first"))
+    mocker.patch.object(original_session, "close")
+
+    new_session = Mock(spec=requests.Session)
+    new_session.send.side_effect = requests.ConnectionError("second")
+    new_session.headers = original_session.headers
+    mocker.patch.object(client, "_new_session", return_value=new_session)
+
+    with pytest.raises(requests.ConnectionError, match="second"):
+        client.get_raw("https://example.zendesk.com/api/v2/items?page[size]=10")
