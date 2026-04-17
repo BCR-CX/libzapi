@@ -50,6 +50,26 @@ class HttpClient:
             self.session = self._new_session()
             return self.session.request(method, f"{self.base_url}{path}", **kwargs)
 
+    def _prepare_and_send(self, method: str, url: str, **kwargs) -> requests.Response:
+        req = requests.Request(method, url, headers=self.session.headers)
+        prepared = req.prepare()
+        prepared.url = url  # override to prevent percent-encoding of brackets
+        return self.session.send(prepared, **kwargs)
+
+    def _request_raw(self, method: str, url: str, **kwargs) -> requests.Response:
+        """Send a request with a pre-built URL, bypassing percent-encoding.
+
+        Uses a manually prepared request so that literal characters like
+        brackets in ``page[size]`` are preserved.
+        """
+        self._refresh_if_stale()
+        try:
+            return self._prepare_and_send(method, url, **kwargs)
+        except (requests.ConnectionError, RemoteDisconnected):
+            self.session.close()
+            self.session = self._new_session()
+            return self._prepare_and_send(method, url, **kwargs)
+
     def get(self, path: str, params: dict | None = None) -> dict:
         resp = self._request("GET", path, params=params, timeout=self.timeout)
         self._raise(resp)
@@ -62,11 +82,7 @@ class HttpClient:
         in query parameters like ``page[size]`` which ``requests``
         would otherwise percent-encode.
         """
-        self._refresh_if_stale()
-        req = requests.Request("GET", url, headers=self.session.headers)
-        prepared = req.prepare()
-        prepared.url = url  # override to prevent percent-encoding of brackets
-        resp = self.session.send(prepared, timeout=self.timeout)
+        resp = self._request_raw("GET", url, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
