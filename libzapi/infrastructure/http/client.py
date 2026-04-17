@@ -1,4 +1,5 @@
 import time
+from http.client import RemoteDisconnected
 
 import requests
 from requests.adapters import HTTPAdapter
@@ -40,9 +41,37 @@ class HttpClient:
             self.session.close()
             self.session = self._new_session()
 
-    def get(self, path: str, params: dict | None = None) -> dict:
+    def _request(self, method: str, path: str, **kwargs) -> requests.Response:
         self._refresh_if_stale()
-        resp = self.session.get(f"{self.base_url}{path}", params=params, timeout=self.timeout)
+        try:
+            return self.session.request(method, f"{self.base_url}{path}", **kwargs)
+        except (requests.ConnectionError, RemoteDisconnected):
+            self.session.close()
+            self.session = self._new_session()
+            return self.session.request(method, f"{self.base_url}{path}", **kwargs)
+
+    def _prepare_and_send(self, method: str, url: str, **kwargs) -> requests.Response:
+        req = requests.Request(method, url, headers=self.session.headers)
+        prepared = req.prepare()
+        prepared.url = url  # override to prevent percent-encoding of brackets
+        return self.session.send(prepared, **kwargs)
+
+    def _request_raw(self, method: str, url: str, **kwargs) -> requests.Response:
+        """Send a request with a pre-built URL, bypassing percent-encoding.
+
+        Uses a manually prepared request so that literal characters like
+        brackets in ``page[size]`` are preserved.
+        """
+        self._refresh_if_stale()
+        try:
+            return self._prepare_and_send(method, url, **kwargs)
+        except (requests.ConnectionError, RemoteDisconnected):
+            self.session.close()
+            self.session = self._new_session()
+            return self._prepare_and_send(method, url, **kwargs)
+
+    def get(self, path: str, params: dict | None = None) -> dict:
+        resp = self._request("GET", path, params=params, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
@@ -53,36 +82,29 @@ class HttpClient:
         in query parameters like ``page[size]`` which ``requests``
         would otherwise percent-encode.
         """
-        self._refresh_if_stale()
-        req = requests.Request("GET", url, headers=self.session.headers)
-        prepared = req.prepare()
-        prepared.url = url  # override to prevent percent-encoding of brackets
-        resp = self.session.send(prepared, timeout=self.timeout)
+        resp = self._request_raw("GET", url, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def post(self, path: str, json: dict) -> dict:
-        self._refresh_if_stale()
-        resp = self.session.post(f"{self.base_url}{path}", json=json, timeout=self.timeout)
+        resp = self._request("POST", path, json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def put(self, path: str, json: dict) -> dict:
-        self._refresh_if_stale()
-        resp = self.session.put(f"{self.base_url}{path}", json=json, timeout=self.timeout)
+        resp = self._request("PUT", path, json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def patch(self, path: str, json: dict) -> dict:
-        self._refresh_if_stale()
-        resp = self.session.patch(f"{self.base_url}{path}", json=json, timeout=self.timeout)
+        resp = self._request("PATCH", path, json=json, timeout=self.timeout)
         self._raise(resp)
         return resp.json()
 
     def post_multipart(self, path: str, files: dict, data: dict | None = None) -> dict:
-        self._refresh_if_stale()
-        resp = self.session.post(
-            f"{self.base_url}{path}",
+        resp = self._request(
+            "POST",
+            path,
             files=files,
             data=data,
             headers={"Content-Type": None},
@@ -92,8 +114,7 @@ class HttpClient:
         return resp.json()
 
     def delete(self, path: str) -> None:
-        self._refresh_if_stale()
-        resp = self.session.delete(f"{self.base_url}{path}", timeout=self.timeout)
+        resp = self._request("DELETE", path, timeout=self.timeout)
         self._raise(resp)
 
     @staticmethod
