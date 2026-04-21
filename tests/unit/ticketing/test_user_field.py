@@ -55,6 +55,29 @@ def test_user_field_api_client_get_option(mocker):
     https.get.assert_called_with("/api/v2/user_fields/44/options/55")
 
 
+def test_user_field_logical_key_normalises_key():
+    from datetime import datetime
+
+    from libzapi.domain.models.ticketing.user_field import UserField
+
+    field = UserField(
+        id=1,
+        url="https://x",
+        type="text",
+        key="Account Region",
+        title="Region",
+        description="",
+        raw_description="",
+        position=1,
+        active=True,
+        system=False,
+        regexp_for_validation=None,
+        created_at=datetime.now(),
+        updated_at=datetime.now(),
+    )
+    assert field.logical_key.as_str() == "user_field:account_region"
+
+
 @pytest.mark.parametrize(
     "error_cls",
     [
