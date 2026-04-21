@@ -12,6 +12,7 @@ from libzapi.infrastructure.api_clients.ticketing.macro_api_client import MacroA
 from libzapi.infrastructure.api_clients.ticketing.organization_api_client import OrganizationApiClient
 from libzapi.infrastructure.api_clients.ticketing.request_api_client import RequestApiClient
 from libzapi.infrastructure.api_clients.ticketing.schedule_api_client import ScheduleApiClient
+from libzapi.infrastructure.api_clients.ticketing.search_api_client import SearchApiClient
 from libzapi.infrastructure.api_clients.ticketing.session_api_client import SessionApiClient
 from libzapi.infrastructure.api_clients.ticketing.sla_policy_api_client import SlaPolicyApiClient
 from libzapi.infrastructure.api_clients.ticketing.suspended_ticket_api_client import SuspendedTicketApiClient
@@ -44,6 +45,7 @@ __all__ = [
     "OrganizationApiClient",
     "RequestApiClient",
     "ScheduleApiClient",
+    "SearchApiClient",
     "SessionApiClient",
     "SlaPolicyApiClient",
     "SupportAddressApiClient",
