@@ -1,7 +1,11 @@
 import pytest
 from unittest.mock import Mock, sentinel
 
-from libzapi.application.commands.ticketing.ticket_cmds import CreateTicketCmd, UpdateTicketCmd
+from libzapi.application.commands.ticketing.ticket_cmds import (
+    CreateTicketCmd,
+    MergeTicketsCmd,
+    UpdateTicketCmd,
+)
 from libzapi.application.services.ticketing.tickets_service import TickestService
 from libzapi.domain.errors import NotFound, RateLimited, Unauthorized, UnprocessableEntity
 from libzapi.domain.models.ticketing.ticket import CustomField
@@ -352,3 +356,211 @@ class TestCastToTicketCommand:
         assert isinstance(cmd, UpdateTicketCmd)
         assert cmd.subject is None
         assert cmd.description is None
+
+
+# ---------------------------------------------------------------------------
+# New list/read methods (delegation)
+# ---------------------------------------------------------------------------
+
+
+class TestAdditionalListMethods:
+    @pytest.mark.parametrize(
+        "method, kwargs",
+        [
+            ("list_user_ccd", {"user_id": 7}),
+            ("list_user_followed", {"user_id": 7}),
+            ("list_user_assigned", {"user_id": 7}),
+            ("list_recent", {}),
+            ("list_collaborators", {"ticket_id": 11}),
+            ("list_followers", {"ticket_id": 11}),
+            ("list_email_ccs", {"ticket_id": 11}),
+            ("list_incidents", {"ticket_id": 11}),
+            ("list_problems", {}),
+            ("organization_count", {"organization_id": 5}),
+            ("user_ccd_count", {"user_id": 7}),
+            ("user_assigned_count", {"user_id": 7}),
+            ("list_related", {"ticket_id": 11}),
+            ("list_deleted", {}),
+        ],
+    )
+    def test_delegates_to_client(self, method, kwargs):
+        service, client = _make_service()
+        getattr(client, method).return_value = sentinel.result
+
+        result = getattr(service, method)(**kwargs)
+
+        getattr(client, method).assert_called_once_with(**kwargs)
+        assert result is sentinel.result
+
+
+# ---------------------------------------------------------------------------
+# update_many / update_many_individually
+# ---------------------------------------------------------------------------
+
+
+class TestUpdateMany:
+    def test_builds_update_cmd_and_delegates(self):
+        service, client = _make_service()
+        client.update_many.return_value = sentinel.job
+
+        result = service.update_many([1, 2], priority="low", subject="s")
+
+        client.update_many.assert_called_once()
+        assert client.update_many.call_args.kwargs["ticket_ids"] == [1, 2]
+        entity = client.update_many.call_args.kwargs["entity"]
+        assert isinstance(entity, UpdateTicketCmd)
+        assert entity.priority == "low"
+        assert entity.subject == "s"
+        assert result is sentinel.job
+
+    def test_no_fields_yields_blank_cmd(self):
+        service, client = _make_service()
+        service.update_many([1])
+        entity = client.update_many.call_args.kwargs["entity"]
+        assert entity.priority is None
+        assert entity.subject is None
+
+
+class TestUpdateManyIndividually:
+    def test_pairs_ids_with_update_cmds(self):
+        service, client = _make_service()
+        client.update_many_individually.return_value = sentinel.job
+
+        result = service.update_many_individually(
+            [(1, {"priority": "low"}), (2, {"tags": ["x"]})]
+        )
+
+        pairs = client.update_many_individually.call_args.kwargs["updates"]
+        assert pairs[0][0] == 1
+        assert isinstance(pairs[0][1], UpdateTicketCmd)
+        assert pairs[0][1].priority == "low"
+        assert pairs[1][0] == 2
+        assert pairs[1][1].tags == ["x"]
+        assert result is sentinel.job
+
+    def test_empty_updates(self):
+        service, client = _make_service()
+        service.update_many_individually([])
+        assert client.update_many_individually.call_args.kwargs["updates"] == []
+
+
+# ---------------------------------------------------------------------------
+# delete / destroy_many / spam / merge / restore / permanently_delete
+# ---------------------------------------------------------------------------
+
+
+class TestDestructive:
+    def test_delete_delegates(self):
+        service, client = _make_service()
+        service.delete(ticket_id=5)
+        client.delete.assert_called_once_with(ticket_id=5)
+
+    def test_destroy_many_delegates(self):
+        service, client = _make_service()
+        client.destroy_many.return_value = sentinel.job
+        assert service.destroy_many([1, 2]) is sentinel.job
+        client.destroy_many.assert_called_once_with(ticket_ids=[1, 2])
+
+    def test_mark_as_spam_delegates(self):
+        service, client = _make_service()
+        service.mark_as_spam(ticket_id=9)
+        client.mark_as_spam.assert_called_once_with(ticket_id=9)
+
+    def test_mark_many_as_spam_delegates(self):
+        service, client = _make_service()
+        client.mark_many_as_spam.return_value = sentinel.job
+        assert service.mark_many_as_spam([1, 2]) is sentinel.job
+        client.mark_many_as_spam.assert_called_once_with(ticket_ids=[1, 2])
+
+    def test_restore_delegates(self):
+        service, client = _make_service()
+        service.restore(ticket_id=5)
+        client.restore.assert_called_once_with(ticket_id=5)
+
+    def test_restore_many_delegates(self):
+        service, client = _make_service()
+        service.restore_many([1, 2])
+        client.restore_many.assert_called_once_with(ticket_ids=[1, 2])
+
+    def test_permanently_delete_delegates(self):
+        service, client = _make_service()
+        client.permanently_delete.return_value = sentinel.job
+        assert service.permanently_delete(ticket_id=5) is sentinel.job
+
+    def test_permanently_delete_many_delegates(self):
+        service, client = _make_service()
+        client.permanently_delete_many.return_value = sentinel.job
+        assert service.permanently_delete_many([1, 2]) is sentinel.job
+
+
+class TestMerge:
+    def test_builds_merge_cmd_with_defaults(self):
+        service, client = _make_service()
+        client.merge.return_value = sentinel.job
+
+        result = service.merge(target_ticket_id=10, source_ids=[1, 2])
+
+        entity = client.merge.call_args.kwargs["entity"]
+        assert isinstance(entity, MergeTicketsCmd)
+        assert entity.source_ids == [1, 2]
+        assert entity.target_comment is None
+        assert entity.source_comment is None
+        assert entity.target_comment_is_public is False
+        assert entity.source_comment_is_public is False
+        assert client.merge.call_args.kwargs["target_ticket_id"] == 10
+        assert result is sentinel.job
+
+    def test_passes_comment_visibility_flags(self):
+        service, client = _make_service()
+
+        service.merge(
+            target_ticket_id=10,
+            source_ids=[1],
+            target_comment="merged",
+            source_comment="dup",
+            target_comment_is_public=True,
+            source_comment_is_public=True,
+        )
+
+        entity = client.merge.call_args.kwargs["entity"]
+        assert entity.target_comment == "merged"
+        assert entity.source_comment == "dup"
+        assert entity.target_comment_is_public is True
+        assert entity.source_comment_is_public is True
+
+
+# ---------------------------------------------------------------------------
+# problems_autocomplete + tag helpers
+# ---------------------------------------------------------------------------
+
+
+class TestAuxiliary:
+    def test_problems_autocomplete_delegates(self):
+        service, client = _make_service()
+        client.problems_autocomplete.return_value = sentinel.matches
+        assert service.problems_autocomplete(text="net") is sentinel.matches
+        client.problems_autocomplete.assert_called_once_with(text="net")
+
+    def test_list_tags_delegates(self):
+        service, client = _make_service()
+        client.list_tags.return_value = ["a", "b"]
+        assert service.list_tags(ticket_id=5) == ["a", "b"]
+        client.list_tags.assert_called_once_with(ticket_id=5)
+
+    def test_set_tags_delegates(self):
+        service, client = _make_service()
+        client.set_tags.return_value = ["a"]
+        assert service.set_tags(ticket_id=5, tags=["a"]) == ["a"]
+        client.set_tags.assert_called_once_with(ticket_id=5, tags=["a"])
+
+    def test_add_tags_delegates(self):
+        service, client = _make_service()
+        client.add_tags.return_value = ["a", "b"]
+        assert service.add_tags(ticket_id=5, tags=["b"]) == ["a", "b"]
+        client.add_tags.assert_called_once_with(ticket_id=5, tags=["b"])
+
+    def test_remove_tags_delegates(self):
+        service, client = _make_service()
+        client.remove_tags.return_value = ["a"]
+        assert service.remove_tags(ticket_id=5, tags=["b"]) == ["a"]
+        client.remove_tags.assert_called_once_with(ticket_id=5, tags=["b"])

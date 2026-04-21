@@ -36,6 +36,22 @@ class User:
 
 
 @dataclass(frozen=True, slots=True)
+class TicketRelated:
+    topic_id: Optional[int] = None
+    jira_issue_ids: Optional[List[str]] = None
+    followup_source_ids: Optional[List[int]] = None
+    from_archive: bool = False
+    incidents: int = 0
+    twitter: Optional[dict] = None
+
+
+@dataclass(frozen=True, slots=True)
+class ProblemMatch:
+    id: int
+    subject: str
+
+
+@dataclass(frozen=True, slots=True)
 class Ticket:
     id: int
     url: str

@@ -37,4 +37,13 @@ class UpdateTicketCmd:
     brand_id: int | None = None
 
 
+@dataclass(frozen=True, slots=True)
+class MergeTicketsCmd:
+    source_ids: Iterable[int]
+    target_comment: str | None = None
+    source_comment: str | None = None
+    target_comment_is_public: bool = False
+    source_comment_is_public: bool = False
+
+
 TicketCmd: TypeAlias = CreateTicketCmd | UpdateTicketCmd
