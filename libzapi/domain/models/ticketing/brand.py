@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import List
+from typing import List, Optional
 
 from libzapi.domain.shared_objects.logical_key import LogicalKey
 from libzapi.domain.shared_objects.thumbnail import Thumbnail
@@ -28,17 +28,18 @@ class Brand:
     url: str
     name: str
     subdomain: str
-    host_mapping: str | None
+    host_mapping: Optional[str]
     has_help_center: bool
     help_center_state: str
     active: bool
     default: bool
     is_deleted: bool
-    logo: Logo
     ticket_form_ids: List[int]
     signature_template: str
     created_at: datetime
     updated_at: datetime
+    logo: Optional[Logo] = None
+    brand_url: Optional[str] = None
 
     @property
     def logical_key(self) -> LogicalKey:
