@@ -113,9 +113,15 @@ class HttpClient:
         self._raise(resp)
         return resp.json()
 
-    def delete(self, path: str) -> None:
-        resp = self._request("DELETE", path, timeout=self.timeout)
+    def delete(self, path: str, json: dict | None = None) -> dict | None:
+        resp = self._request("DELETE", path, json=json, timeout=self.timeout)
         self._raise(resp)
+        if resp.status_code == 204 or not resp.content:
+            return None
+        try:
+            return resp.json()
+        except ValueError:
+            return None
 
     @staticmethod
     def _raise(resp: requests.Response) -> None:

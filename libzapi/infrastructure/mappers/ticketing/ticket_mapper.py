@@ -1,4 +1,4 @@
-from libzapi.application.commands.ticketing.ticket_cmds import CreateTicketCmd, UpdateTicketCmd
+from libzapi.application.commands.ticketing.ticket_cmds import CreateTicketCmd, MergeTicketsCmd, UpdateTicketCmd
 
 
 def to_payload_create(cmd: CreateTicketCmd) -> dict:
@@ -47,3 +47,14 @@ def to_payload_update(cmd: UpdateTicketCmd) -> dict:
     if cmd.brand_id:
         patch["brand_id"] = cmd.brand_id
     return {"ticket": patch}
+
+
+def to_payload_merge(cmd: MergeTicketsCmd) -> dict:
+    payload: dict = {"ids": list(cmd.source_ids)}
+    if cmd.target_comment is not None:
+        payload["target_comment"] = cmd.target_comment
+        payload["target_comment_is_public"] = cmd.target_comment_is_public
+    if cmd.source_comment is not None:
+        payload["source_comment"] = cmd.source_comment
+        payload["source_comment_is_public"] = cmd.source_comment_is_public
+    return payload

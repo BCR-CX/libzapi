@@ -148,7 +148,7 @@ def test_delete_returns_none(mocker):
     result = client.delete("/api/v2/tickets/1.json")
 
     client.session.request.assert_called_once_with(
-        "DELETE", "https://example.zendesk.com/api/v2/tickets/1.json", timeout=30.0
+        "DELETE", "https://example.zendesk.com/api/v2/tickets/1.json", json=None, timeout=30.0
     )
     assert result is None
 

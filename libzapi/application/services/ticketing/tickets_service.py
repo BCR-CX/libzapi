@@ -1,8 +1,22 @@
+from __future__ import annotations
+
 from typing import Iterable
 
-from libzapi.application.commands.ticketing.ticket_cmds import CreateTicketCmd, UpdateTicketCmd, TicketCmd
-from libzapi.domain.models.ticketing.ticket import Ticket, User, CustomField
+from libzapi.application.commands.ticketing.ticket_cmds import (
+    CreateTicketCmd,
+    MergeTicketsCmd,
+    TicketCmd,
+    UpdateTicketCmd,
+)
+from libzapi.domain.models.ticketing.ticket import (
+    CustomField,
+    ProblemMatch,
+    Ticket,
+    TicketRelated,
+    User,
+)
 from libzapi.domain.shared_objects.count_snapshot import CountSnapshot
+from libzapi.domain.shared_objects.job_status import JobStatus
 from libzapi.infrastructure.api_clients.ticketing.ticket_api_client import TicketApiClient
 
 
@@ -172,6 +186,77 @@ class TickestService:
             ticket_type,
         )
         return self._client.update_ticket(ticket_id=ticket_id, entity=entity)
+
+    def update_many(self, ticket_ids: Iterable[int], **fields) -> JobStatus:
+        entity = UpdateTicketCmd(**fields)
+        return self._client.update_many(ticket_ids=ticket_ids, entity=entity)
+
+    def update_many_individually(self, updates: Iterable[tuple[int, dict]]) -> JobStatus:
+        pairs = [(ticket_id, UpdateTicketCmd(**fields)) for ticket_id, fields in updates]
+        return self._client.update_many_individually(updates=pairs)
+
+    def delete(self, ticket_id: int) -> None:
+        self._client.delete(ticket_id=ticket_id)
+
+    def destroy_many(self, ticket_ids: Iterable[int]) -> JobStatus:
+        return self._client.destroy_many(ticket_ids=ticket_ids)
+
+    def mark_as_spam(self, ticket_id: int) -> None:
+        self._client.mark_as_spam(ticket_id=ticket_id)
+
+    def mark_many_as_spam(self, ticket_ids: Iterable[int]) -> JobStatus:
+        return self._client.mark_many_as_spam(ticket_ids=ticket_ids)
+
+    def merge(
+        self,
+        target_ticket_id: int,
+        source_ids: Iterable[int],
+        target_comment: str | None = None,
+        source_comment: str | None = None,
+        target_comment_is_public: bool = False,
+        source_comment_is_public: bool = False,
+    ) -> JobStatus:
+        entity = MergeTicketsCmd(
+            source_ids=source_ids,
+            target_comment=target_comment,
+            source_comment=source_comment,
+            target_comment_is_public=target_comment_is_public,
+            source_comment_is_public=source_comment_is_public,
+        )
+        return self._client.merge(target_ticket_id=target_ticket_id, entity=entity)
+
+    def list_related(self, ticket_id: int) -> TicketRelated:
+        return self._client.list_related(ticket_id=ticket_id)
+
+    def list_deleted(self) -> Iterable[Ticket]:
+        return self._client.list_deleted()
+
+    def restore(self, ticket_id: int) -> None:
+        self._client.restore(ticket_id=ticket_id)
+
+    def restore_many(self, ticket_ids: Iterable[int]) -> None:
+        self._client.restore_many(ticket_ids=ticket_ids)
+
+    def permanently_delete(self, ticket_id: int) -> JobStatus:
+        return self._client.permanently_delete(ticket_id=ticket_id)
+
+    def permanently_delete_many(self, ticket_ids: Iterable[int]) -> JobStatus:
+        return self._client.permanently_delete_many(ticket_ids=ticket_ids)
+
+    def problems_autocomplete(self, text: str) -> Iterable[ProblemMatch]:
+        return self._client.problems_autocomplete(text=text)
+
+    def list_tags(self, ticket_id: int) -> list[str]:
+        return self._client.list_tags(ticket_id=ticket_id)
+
+    def set_tags(self, ticket_id: int, tags: Iterable[str]) -> list[str]:
+        return self._client.set_tags(ticket_id=ticket_id, tags=tags)
+
+    def add_tags(self, ticket_id: int, tags: Iterable[str]) -> list[str]:
+        return self._client.add_tags(ticket_id=ticket_id, tags=tags)
+
+    def remove_tags(self, ticket_id: int, tags: Iterable[str]) -> list[str]:
+        return self._client.remove_tags(ticket_id=ticket_id, tags=tags)
 
     def create_many(self, dict_input: Iterable[dict]) -> Iterable[Ticket]:
         entity = []
