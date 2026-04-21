@@ -68,3 +68,7 @@ class GroupApiClient:
 
     def delete(self, group_id: int) -> None:
         self._http.delete(f"/api/v2/groups/{int(group_id)}")
+
+    def count_assignable(self) -> CountSnapshot:
+        data = self._http.get("/api/v2/groups/assignable/count")
+        return to_count_snapshot(data["count"])
