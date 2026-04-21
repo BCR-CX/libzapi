@@ -1,7 +1,11 @@
+from __future__ import annotations
+
 from typing import Iterable
 
 from libzapi.domain.models.ticketing.sessions import Session
-from libzapi.infrastructure.api_clients.ticketing.session_api_client import SessionApiClient
+from libzapi.infrastructure.api_clients.ticketing.session_api_client import (
+    SessionApiClient,
+)
 
 
 class SessionsService:
@@ -18,3 +22,15 @@ class SessionsService:
 
     def get(self, user_id: int, session_id: int) -> Session:
         return self._client.get(user_id=user_id, session_id=session_id)
+
+    def delete(self, user_id: int, session_id: int) -> None:
+        self._client.delete(user_id=user_id, session_id=session_id)
+
+    def delete_user_sessions(self, user_id: int) -> None:
+        self._client.delete_user_sessions(user_id=user_id)
+
+    def get_current(self) -> Session:
+        return self._client.get_current()
+
+    def logout_current(self) -> None:
+        self._client.logout_current()
