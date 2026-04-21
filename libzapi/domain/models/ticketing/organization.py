@@ -15,8 +15,8 @@ class Organization:
     created_at: datetime
     updated_at: datetime
     domain_names: List[str]
-    details: str
-    notes: str
+    details: Optional[str]
+    notes: Optional[str]
     tags: list[str]
     organization_fields: dict[str, Any]
     group_id: Optional[int] = None
@@ -26,3 +26,9 @@ class Organization:
     def logical_key(self) -> LogicalKey:
         base = self.name.lower().replace(" ", "_")
         return LogicalKey("organization", base)
+
+
+@dataclass(frozen=True, slots=True)
+class OrganizationRelated:
+    tickets_count: int = 0
+    users_count: int = 0
