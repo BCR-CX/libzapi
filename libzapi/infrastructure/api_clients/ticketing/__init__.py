@@ -17,6 +17,7 @@ from libzapi.infrastructure.api_clients.ticketing.session_api_client import Sess
 from libzapi.infrastructure.api_clients.ticketing.sla_policy_api_client import SlaPolicyApiClient
 from libzapi.infrastructure.api_clients.ticketing.suspended_ticket_api_client import SuspendedTicketApiClient
 from libzapi.infrastructure.api_clients.ticketing.support_address_api_client import SupportAddressApiClient
+from libzapi.infrastructure.api_clients.ticketing.tag_api_client import TagApiClient
 from libzapi.infrastructure.api_clients.ticketing.ticket_api_client import TicketApiClient
 from libzapi.infrastructure.api_clients.ticketing.ticket_audit_api_client import TicketAuditApiClient
 from libzapi.infrastructure.api_clients.ticketing.ticket_field_api_client import TicketFieldApiClient
@@ -50,6 +51,7 @@ __all__ = [
     "SlaPolicyApiClient",
     "SupportAddressApiClient",
     "SuspendedTicketApiClient",
+    "TagApiClient",
     "TicketApiClient",
     "TicketAuditApiClient",
     "TicketFieldApiClient",
