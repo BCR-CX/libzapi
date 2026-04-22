@@ -51,6 +51,7 @@ from libzapi.application.services.ticketing.user_fields_service import UserField
 from libzapi.application.services.ticketing.user_identities_service import UserIdentitiesService
 from libzapi.application.services.ticketing.views_service import ViewsService
 from libzapi.application.services.ticketing.workspace_service import WorkspaceService
+from libzapi.application.services.ticketing.zendesk_ips_service import ZendeskIPsService
 from libzapi.infrastructure.http.auth import oauth_headers, api_token_headers
 from libzapi.infrastructure.http.client import HttpClient
 
@@ -118,3 +119,4 @@ class Ticketing:
         self.user_identities = UserIdentitiesService(api.UserIdentityApiClient(http))
         self.views = ViewsService(api.ViewApiClient(http))
         self.workspaces = WorkspaceService(api.WorkspaceApiClient(http))
+        self.zendesk_ips = ZendeskIPsService(api.ZendeskIPApiClient(http))
