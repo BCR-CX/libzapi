@@ -12,6 +12,9 @@ from libzapi.application.services.ticketing.groups_service import GroupsService
 from libzapi.application.services.ticketing.group_memberships_service import (
     GroupMembershipsService,
 )
+from libzapi.application.services.ticketing.incremental_exports_service import (
+    IncrementalExportsService,
+)
 from libzapi.application.services.ticketing.job_statuses_service import JobStatusesService
 from libzapi.application.services.ticketing.locales_service import LocalesService
 from libzapi.application.services.ticketing.macro_service import MacroService
@@ -82,6 +85,9 @@ class Ticketing:
         self.email_notifications = EmailNotificationService(api.EmailNotificationApiClient(http))
         self.groups = GroupsService(api.GroupApiClient(http))
         self.group_memberships = GroupMembershipsService(api.GroupMembershipApiClient(http))
+        self.incremental_exports = IncrementalExportsService(
+            api.IncrementalExportApiClient(http)
+        )
         self.job_statuses = JobStatusesService(api.JobStatusApiClient(http))
         self.locales = LocalesService(api.LocaleApiClient(http))
         self.macros = MacroService(api.MacroApiClient(http))

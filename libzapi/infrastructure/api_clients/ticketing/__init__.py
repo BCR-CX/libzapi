@@ -11,6 +11,9 @@ from libzapi.infrastructure.api_clients.ticketing.group_api_client import GroupA
 from libzapi.infrastructure.api_clients.ticketing.group_membership_api_client import (
     GroupMembershipApiClient,
 )
+from libzapi.infrastructure.api_clients.ticketing.incremental_export_api_client import (
+    IncrementalExportApiClient,
+)
 from libzapi.infrastructure.api_clients.ticketing.job_status_api_client import JobStatusApiClient
 from libzapi.infrastructure.api_clients.ticketing.locale_api_client import LocaleApiClient
 from libzapi.infrastructure.api_clients.ticketing.macro_api_client import MacroApiClient
@@ -64,6 +67,7 @@ __all__ = [
     "EmailNotificationApiClient",
     "GroupApiClient",
     "GroupMembershipApiClient",
+    "IncrementalExportApiClient",
     "JobStatusApiClient",
     "LocaleApiClient",
     "MacroApiClient",
