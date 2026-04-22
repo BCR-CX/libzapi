@@ -11,6 +11,9 @@ from libzapi.application.services.ticketing.group_memberships_service import (
 )
 from libzapi.application.services.ticketing.macro_service import MacroService
 from libzapi.application.services.ticketing.organizations_service import OrganizationsService
+from libzapi.application.services.ticketing.organization_memberships_service import (
+    OrganizationMembershipsService,
+)
 from libzapi.application.services.ticketing.requests_service import RequestsService
 from libzapi.application.services.ticketing.schedule_service import ScheduleService
 from libzapi.application.services.ticketing.search_service import SearchService
@@ -59,6 +62,9 @@ class Ticketing:
         self.group_memberships = GroupMembershipsService(api.GroupMembershipApiClient(http))
         self.macros = MacroService(api.MacroApiClient(http))
         self.organizations = OrganizationsService(api.OrganizationApiClient(http))
+        self.organization_memberships = OrganizationMembershipsService(
+            api.OrganizationMembershipApiClient(http)
+        )
         self.requests = RequestsService(api.RequestApiClient(http))
         self.schedules = ScheduleService(api.ScheduleApiClient(http))
         self.search = SearchService(api.SearchApiClient(http))

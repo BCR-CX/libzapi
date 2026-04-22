@@ -10,6 +10,9 @@ from libzapi.infrastructure.api_clients.ticketing.group_membership_api_client im
 )
 from libzapi.infrastructure.api_clients.ticketing.macro_api_client import MacroApiClient
 from libzapi.infrastructure.api_clients.ticketing.organization_api_client import OrganizationApiClient
+from libzapi.infrastructure.api_clients.ticketing.organization_membership_api_client import (
+    OrganizationMembershipApiClient,
+)
 from libzapi.infrastructure.api_clients.ticketing.request_api_client import RequestApiClient
 from libzapi.infrastructure.api_clients.ticketing.schedule_api_client import ScheduleApiClient
 from libzapi.infrastructure.api_clients.ticketing.search_api_client import SearchApiClient
@@ -45,6 +48,7 @@ __all__ = [
     "GroupMembershipApiClient",
     "MacroApiClient",
     "OrganizationApiClient",
+    "OrganizationMembershipApiClient",
     "RequestApiClient",
     "ScheduleApiClient",
     "SearchApiClient",
