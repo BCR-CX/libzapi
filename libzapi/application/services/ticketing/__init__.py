@@ -45,6 +45,7 @@ from libzapi.application.services.ticketing.ticket_comments_service import Ticke
 from libzapi.application.services.ticketing.ticket_fields_service import TicketFieldsService
 from libzapi.application.services.ticketing.ticket_forms_service import TicketFormsService
 from libzapi.application.services.ticketing.ticket_metrics_service import TicketMetricsService
+from libzapi.application.services.ticketing.ticket_skips_service import TicketSkipsService
 from libzapi.application.services.ticketing.ticket_trigger_categories_service import TicketTriggerCategoriesService
 from libzapi.application.services.ticketing.ticket_trigger_service import TicketTriggerService
 from libzapi.application.services.ticketing.users_service import UsersService
@@ -114,6 +115,7 @@ class Ticketing:
         self.ticket_forms = TicketFormsService(api.TicketFormApiClient(http))
         self.ticket_metrics = TicketMetricsService(api.TicketMetricApiClient(http))
         self.ticket_metric_events = api.TicketMetricEventApiClient(http)
+        self.ticket_skips = TicketSkipsService(api.TicketSkipApiClient(http))
         self.ticket_triggers = TicketTriggerService(api.TicketTriggerApiClient(http))
         self.ticket_trigger_categories = TicketTriggerCategoriesService(api.TicketTriggerCategoryApiClient(http))
         self.users = UsersService(api.UserApiClient(http))
