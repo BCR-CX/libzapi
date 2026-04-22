@@ -24,6 +24,9 @@ from libzapi.infrastructure.api_clients.ticketing.satisfaction_rating_api_client
 from libzapi.infrastructure.api_clients.ticketing.schedule_api_client import ScheduleApiClient
 from libzapi.infrastructure.api_clients.ticketing.search_api_client import SearchApiClient
 from libzapi.infrastructure.api_clients.ticketing.session_api_client import SessionApiClient
+from libzapi.infrastructure.api_clients.ticketing.side_conversation_api_client import (
+    SideConversationApiClient,
+)
 from libzapi.infrastructure.api_clients.ticketing.sla_policy_api_client import SlaPolicyApiClient
 from libzapi.infrastructure.api_clients.ticketing.suspended_ticket_api_client import SuspendedTicketApiClient
 from libzapi.infrastructure.api_clients.ticketing.support_address_api_client import SupportAddressApiClient
@@ -65,6 +68,7 @@ __all__ = [
     "ScheduleApiClient",
     "SearchApiClient",
     "SessionApiClient",
+    "SideConversationApiClient",
     "SlaPolicyApiClient",
     "SupportAddressApiClient",
     "SuspendedTicketApiClient",
