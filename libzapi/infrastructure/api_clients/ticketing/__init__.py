@@ -38,6 +38,7 @@ from libzapi.infrastructure.api_clients.ticketing.user_field_api_client import U
 from libzapi.infrastructure.api_clients.ticketing.user_identity_api_client import UserIdentityApiClient
 from libzapi.infrastructure.api_clients.ticketing.view_api_client import ViewApiClient
 from libzapi.infrastructure.api_clients.ticketing.workspace_api_client import WorkspaceApiClient
+from libzapi.infrastructure.api_clients.ticketing.zendesk_ip_api_client import ZendeskIPApiClient
 
 __all__ = [
     "AccountSettingsApiClient",
@@ -74,4 +75,5 @@ __all__ = [
     "UserIdentityApiClient",
     "ViewApiClient",
     "WorkspaceApiClient",
+    "ZendeskIPApiClient",
 ]
