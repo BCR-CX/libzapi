@@ -2,6 +2,9 @@ from libzapi.infrastructure.api_clients.ticketing.account_settings_api_client im
 from libzapi.infrastructure.api_clients.ticketing.attachment_api_client import AttachmentApiClient
 from libzapi.infrastructure.api_clients.ticketing.automation_api_client import AutomationApiClient
 from libzapi.infrastructure.api_clients.ticketing.brand_api_client import BrandApiClient
+from libzapi.infrastructure.api_clients.ticketing.dynamic_content_api_client import (
+    DynamicContentApiClient,
+)
 from libzapi.infrastructure.api_clients.ticketing.brand_agent_api_client import BrandAgentApiClient
 from libzapi.infrastructure.api_clients.ticketing.custom_ticket_status_api_client import (
     CustomTicketStatusApiClient,
@@ -61,6 +64,7 @@ __all__ = [
     "BrandApiClient",
     "BrandAgentApiClient",
     "CustomTicketStatusApiClient",
+    "DynamicContentApiClient",
     "EmailNotificationApiClient",
     "GroupApiClient",
     "GroupMembershipApiClient",
