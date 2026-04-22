@@ -28,6 +28,7 @@ from libzapi.infrastructure.api_clients.ticketing.ticket_trigger_category_api_cl
 )
 from libzapi.infrastructure.api_clients.ticketing.user_api_client import UserApiClient
 from libzapi.infrastructure.api_clients.ticketing.user_field_api_client import UserFieldApiClient
+from libzapi.infrastructure.api_clients.ticketing.user_identity_api_client import UserIdentityApiClient
 from libzapi.infrastructure.api_clients.ticketing.view_api_client import ViewApiClient
 from libzapi.infrastructure.api_clients.ticketing.workspace_api_client import WorkspaceApiClient
 
@@ -58,6 +59,7 @@ __all__ = [
     "TicketTriggerCategoryApiClient",
     "UserApiClient",
     "UserFieldApiClient",
+    "UserIdentityApiClient",
     "ViewApiClient",
     "WorkspaceApiClient",
 ]
