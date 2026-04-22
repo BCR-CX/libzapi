@@ -19,6 +19,9 @@ from libzapi.application.services.ticketing.requests_service import RequestsServ
 from libzapi.application.services.ticketing.schedule_service import ScheduleService
 from libzapi.application.services.ticketing.search_service import SearchService
 from libzapi.application.services.ticketing.sessions_service import SessionsService
+from libzapi.application.services.ticketing.side_conversations_service import (
+    SideConversationsService,
+)
 from libzapi.application.services.ticketing.sla_policies_service import SlaPoliciesService
 from libzapi.application.services.ticketing.support_addresses_service import SupportAddressesService
 from libzapi.application.services.ticketing.suspended_tickets_service import SuspendedTicketsService
@@ -72,6 +75,7 @@ class Ticketing:
         self.schedules = ScheduleService(api.ScheduleApiClient(http))
         self.search = SearchService(api.SearchApiClient(http))
         self.sessions = SessionsService(api.SessionApiClient(http))
+        self.side_conversations = SideConversationsService(api.SideConversationApiClient(http))
         self.sla_policies = SlaPoliciesService(api.SlaPolicyApiClient(http))
         self.support_addresses = SupportAddressesService(api.SupportAddressApiClient(http))
         self.suspended_tickets = SuspendedTicketsService(api.SuspendedTicketApiClient(http))
