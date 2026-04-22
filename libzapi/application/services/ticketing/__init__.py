@@ -19,6 +19,7 @@ from libzapi.application.services.ticketing.support_addresses_service import Sup
 from libzapi.application.services.ticketing.suspended_tickets_service import SuspendedTicketsService
 from libzapi.application.services.ticketing.tickets_service import TickestService
 from libzapi.application.services.ticketing.ticket_audits_service import TicketAuditsService
+from libzapi.application.services.ticketing.ticket_comments_service import TicketCommentsService
 from libzapi.application.services.ticketing.ticket_fields_service import TicketFieldsService
 from libzapi.application.services.ticketing.ticket_forms_service import TicketFormsService
 from libzapi.application.services.ticketing.ticket_metrics_service import TicketMetricsService
@@ -64,6 +65,7 @@ class Ticketing:
         self.suspended_tickets = SuspendedTicketsService(api.SuspendedTicketApiClient(http))
         self.tickets = TickestService(api.TicketApiClient(http))
         self.ticket_audits = TicketAuditsService(api.TicketAuditApiClient(http))
+        self.ticket_comments = TicketCommentsService(api.TicketCommentApiClient(http))
         self.ticket_fields = TicketFieldsService(api.TicketFieldApiClient(http))
         self.ticket_forms = TicketFormsService(api.TicketFormApiClient(http))
         self.ticket_metrics = TicketMetricsService(api.TicketMetricApiClient(http))
