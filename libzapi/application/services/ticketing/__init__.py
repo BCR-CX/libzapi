@@ -10,6 +10,7 @@ from libzapi.application.services.ticketing.group_memberships_service import (
     GroupMembershipsService,
 )
 from libzapi.application.services.ticketing.job_statuses_service import JobStatusesService
+from libzapi.application.services.ticketing.locales_service import LocalesService
 from libzapi.application.services.ticketing.macro_service import MacroService
 from libzapi.application.services.ticketing.organizations_service import OrganizationsService
 from libzapi.application.services.ticketing.organization_memberships_service import (
@@ -63,6 +64,7 @@ class Ticketing:
         self.groups = GroupsService(api.GroupApiClient(http))
         self.group_memberships = GroupMembershipsService(api.GroupMembershipApiClient(http))
         self.job_statuses = JobStatusesService(api.JobStatusApiClient(http))
+        self.locales = LocalesService(api.LocaleApiClient(http))
         self.macros = MacroService(api.MacroApiClient(http))
         self.organizations = OrganizationsService(api.OrganizationApiClient(http))
         self.organization_memberships = OrganizationMembershipsService(

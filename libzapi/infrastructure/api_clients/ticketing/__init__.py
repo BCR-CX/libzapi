@@ -9,6 +9,7 @@ from libzapi.infrastructure.api_clients.ticketing.group_membership_api_client im
     GroupMembershipApiClient,
 )
 from libzapi.infrastructure.api_clients.ticketing.job_status_api_client import JobStatusApiClient
+from libzapi.infrastructure.api_clients.ticketing.locale_api_client import LocaleApiClient
 from libzapi.infrastructure.api_clients.ticketing.macro_api_client import MacroApiClient
 from libzapi.infrastructure.api_clients.ticketing.organization_api_client import OrganizationApiClient
 from libzapi.infrastructure.api_clients.ticketing.organization_membership_api_client import (
@@ -49,6 +50,7 @@ __all__ = [
     "GroupApiClient",
     "GroupMembershipApiClient",
     "JobStatusApiClient",
+    "LocaleApiClient",
     "MacroApiClient",
     "OrganizationApiClient",
     "OrganizationMembershipApiClient",
