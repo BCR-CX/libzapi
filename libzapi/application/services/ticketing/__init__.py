@@ -7,6 +7,7 @@ from libzapi.application.services.ticketing.brands_service import BrandsService
 from libzapi.application.services.ticketing.custom_ticket_statuses_service import (
     CustomTicketStatusesService,
 )
+from libzapi.application.services.ticketing.dynamic_content_service import DynamicContentService
 from libzapi.application.services.ticketing.email_notifications_service import EmailNotificationService
 from libzapi.application.services.ticketing.groups_service import GroupsService
 from libzapi.application.services.ticketing.group_memberships_service import (
@@ -83,6 +84,7 @@ class Ticketing:
         self.custom_ticket_statuses = CustomTicketStatusesService(
             api.CustomTicketStatusApiClient(http)
         )
+        self.dynamic_content = DynamicContentService(api.DynamicContentApiClient(http))
         self.email_notifications = EmailNotificationService(api.EmailNotificationApiClient(http))
         self.groups = GroupsService(api.GroupApiClient(http))
         self.group_memberships = GroupMembershipsService(api.GroupMembershipApiClient(http))
