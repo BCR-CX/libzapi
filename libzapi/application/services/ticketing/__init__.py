@@ -16,6 +16,9 @@ from libzapi.application.services.ticketing.organization_memberships_service imp
     OrganizationMembershipsService,
 )
 from libzapi.application.services.ticketing.requests_service import RequestsService
+from libzapi.application.services.ticketing.satisfaction_ratings_service import (
+    SatisfactionRatingsService,
+)
 from libzapi.application.services.ticketing.schedule_service import ScheduleService
 from libzapi.application.services.ticketing.search_service import SearchService
 from libzapi.application.services.ticketing.sessions_service import SessionsService
@@ -69,6 +72,9 @@ class Ticketing:
             api.OrganizationMembershipApiClient(http)
         )
         self.requests = RequestsService(api.RequestApiClient(http))
+        self.satisfaction_ratings = SatisfactionRatingsService(
+            api.SatisfactionRatingApiClient(http)
+        )
         self.schedules = ScheduleService(api.ScheduleApiClient(http))
         self.search = SearchService(api.SearchApiClient(http))
         self.sessions = SessionsService(api.SessionApiClient(http))

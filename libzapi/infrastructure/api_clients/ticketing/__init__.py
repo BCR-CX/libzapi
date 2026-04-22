@@ -15,6 +15,9 @@ from libzapi.infrastructure.api_clients.ticketing.organization_membership_api_cl
     OrganizationMembershipApiClient,
 )
 from libzapi.infrastructure.api_clients.ticketing.request_api_client import RequestApiClient
+from libzapi.infrastructure.api_clients.ticketing.satisfaction_rating_api_client import (
+    SatisfactionRatingApiClient,
+)
 from libzapi.infrastructure.api_clients.ticketing.schedule_api_client import ScheduleApiClient
 from libzapi.infrastructure.api_clients.ticketing.search_api_client import SearchApiClient
 from libzapi.infrastructure.api_clients.ticketing.session_api_client import SessionApiClient
@@ -53,6 +56,7 @@ __all__ = [
     "OrganizationApiClient",
     "OrganizationMembershipApiClient",
     "RequestApiClient",
+    "SatisfactionRatingApiClient",
     "ScheduleApiClient",
     "SearchApiClient",
     "SessionApiClient",
