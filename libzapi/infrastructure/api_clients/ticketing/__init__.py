@@ -11,6 +11,9 @@ from libzapi.infrastructure.api_clients.ticketing.group_membership_api_client im
 from libzapi.infrastructure.api_clients.ticketing.macro_api_client import MacroApiClient
 from libzapi.infrastructure.api_clients.ticketing.organization_api_client import OrganizationApiClient
 from libzapi.infrastructure.api_clients.ticketing.request_api_client import RequestApiClient
+from libzapi.infrastructure.api_clients.ticketing.satisfaction_rating_api_client import (
+    SatisfactionRatingApiClient,
+)
 from libzapi.infrastructure.api_clients.ticketing.schedule_api_client import ScheduleApiClient
 from libzapi.infrastructure.api_clients.ticketing.session_api_client import SessionApiClient
 from libzapi.infrastructure.api_clients.ticketing.sla_policy_api_client import SlaPolicyApiClient
@@ -43,6 +46,7 @@ __all__ = [
     "MacroApiClient",
     "OrganizationApiClient",
     "RequestApiClient",
+    "SatisfactionRatingApiClient",
     "ScheduleApiClient",
     "SessionApiClient",
     "SlaPolicyApiClient",

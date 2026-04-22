@@ -12,6 +12,9 @@ from libzapi.application.services.ticketing.group_memberships_service import (
 from libzapi.application.services.ticketing.macro_service import MacroService
 from libzapi.application.services.ticketing.organizations_service import OrganizationsService
 from libzapi.application.services.ticketing.requests_service import RequestsService
+from libzapi.application.services.ticketing.satisfaction_ratings_service import (
+    SatisfactionRatingsService,
+)
 from libzapi.application.services.ticketing.schedule_service import ScheduleService
 from libzapi.application.services.ticketing.sessions_service import SessionsService
 from libzapi.application.services.ticketing.sla_policies_service import SlaPoliciesService
@@ -57,6 +60,9 @@ class Ticketing:
         self.macros = MacroService(api.MacroApiClient(http))
         self.organizations = OrganizationsService(api.OrganizationApiClient(http))
         self.requests = RequestsService(api.RequestApiClient(http))
+        self.satisfaction_ratings = SatisfactionRatingsService(
+            api.SatisfactionRatingApiClient(http)
+        )
         self.schedules = ScheduleService(api.ScheduleApiClient(http))
         self.sessions = SessionsService(api.SessionApiClient(http))
         self.sla_policies = SlaPoliciesService(api.SlaPolicyApiClient(http))
